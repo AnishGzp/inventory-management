@@ -1,0 +1,135 @@
+.register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 100vh;
+
+  background-color: var(--light-dark-backgrund);
+}
+
+.register_container {
+  border-radius: 7px;
+
+  max-width: 1100px;
+
+  width: 86%;
+  height: 76%;
+
+  padding: 2rem 1rem;
+
+  background-color: #ffff;
+
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 20px;
+}
+
+.register_container-content_info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  margin: 0 0 1rem;
+}
+
+.register_container-content_info-title {
+  font-weight: 500;
+  font-size: var(--font-size-lg);
+}
+
+.register_container-content_info-subtitle {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.register_container-content_info-subtitle p {
+  font-size: var(--font-size-md);
+}
+
+.register .register_container .register_container-content form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+
+  padding: 0.6rem;
+}
+
+.register_container-content_form-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.register_container-content_form-input_pass {
+  grid-area: 3/1/4/3;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.register_container-content > p {
+  margin-top: 1rem;
+
+  font-size: var(--font-size-md);
+  font-weight: 500;
+}
+
+.register_container-content form button {
+  width: 50%;
+}
+
+@media screen and (max-width: 950px) {
+  .register_container {
+    height: fit-content;
+  }
+
+  .register .register_container .register_container-content form {
+    grid-template-columns: 1fr;
+  }
+
+  .register_container-content form button {
+    width: 100%;
+  }
+
+  .register_container-content_form-input_pass {
+    grid-area: auto;
+  }
+}
+
+@media screen and (max-width: 850px) {
+  .register {
+    padding: 1rem 0;
+  }
+
+  .register_container {
+    height: fit-content;
+
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.5fr 1.5fr;
+  }
+
+  .register_container-image {
+    height: 200px;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .register_container-content_info-title {
+    font-size: var(--font-size-md);
+  }
+
+  .register_container-content_info-subtitle p,
+  .register_container-content > p {
+    font-size: var(--font-size-sm);
+  }
+
+  .register .register_container .register_container-content form {
+    padding: 0;
+  }
+}
