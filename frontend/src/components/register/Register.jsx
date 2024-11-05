@@ -1,7 +1,8 @@
 import "./register.css";
 
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import { loginPage } from "../../assets/index.js";
 
@@ -13,6 +14,8 @@ export default function Register() {
     phoneNo: "",
     pass: "",
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let prevTitle = document.title;
@@ -39,11 +42,28 @@ export default function Register() {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    fetch("http://localhost:3000/auth/newUser", {
+    const res = await fetch("http://localhost:3000/auth/newUser", {
       method: "POST",
       body: JSON.stringify(userData),
       headers: { "Content-Type": "application/json" },
     });
+
+    const data = await res.json();
+
+    if (res.status === 500) {
+      toast.error("User does not created");
+    } else if (data?.error?.code === "ER_DUP_ENTRY") {
+      toast.error("Email already exists");
+    } else if (res.status === 400) {
+      toast.error("Enter all the fields");
+    } else if (res.status === 200) {
+      toast.success("User created successfully", {
+        autoClose: 3000,
+      });
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+    }
   }
 
   return (
@@ -120,6 +140,7 @@ export default function Register() {
           </p>
         </div>
       </div>
+      <ToastContainer position="bottom-right" />
     </section>
   );
 }

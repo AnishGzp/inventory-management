@@ -17,9 +17,12 @@ async function connectToDatabase() {
       database: database,
     });
     console.log("Database is connected");
+
     return db;
   } catch (err) {
     console.log("Database Connection Error", err.stack);
+
+    throw new Error("Failed to connect to the database");
   }
 }
 
