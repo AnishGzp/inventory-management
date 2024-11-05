@@ -2,10 +2,18 @@ import "./register.css";
 
 import { Link } from "react-router-dom";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { loginPage } from "../../assets/index.js";
 
 export default function Register() {
+  const [userData, setUserData] = useState({
+    fName: "",
+    lName: "",
+    email: "",
+    phoneNo: "",
+    pass: "",
+  });
+
   useEffect(() => {
     let prevTitle = document.title;
     document.title = `Register || ${prevTitle}`;
@@ -14,6 +22,29 @@ export default function Register() {
       document.title = prevTitle;
     };
   }, []);
+
+  function handleChange(e) {
+    const { id, value } = e.target;
+    setUserData((prevData) => ({ ...prevData, [id]: value }));
+  }
+
+  function validateInput(e) {
+    const { id, value } = e.target;
+
+    if (/^\d*$/.test(value) && value.length <= 10) {
+      setUserData((prevData) => ({ ...prevData, [id]: value }));
+    }
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    fetch("http://localhost:3000/auth/newUser", {
+      method: "POST",
+      body: JSON.stringify(userData),
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   return (
     <section className="register">
@@ -34,10 +65,15 @@ export default function Register() {
               </p>
             </div>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="register_container-content_form-input">
               <label htmlFor="fName">First Name</label>
-              <input type="text" id="fName" placeholder="Enter your name" />
+              <input
+                type="text"
+                id="fName"
+                placeholder="Enter your name"
+                onChange={handleChange}
+              />
             </div>
             <div className="register_container-content_form-input">
               <label htmlFor="lName">Last Name</label>
@@ -45,18 +81,26 @@ export default function Register() {
                 type="text"
                 id="lName"
                 placeholder="Enter your last name"
+                onChange={handleChange}
               />
             </div>
             <div className="register_container-content_form-input">
               <label htmlFor="email">Email</label>
-              <input type="email" id="email" placeholder="Enter your email" />
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                onChange={handleChange}
+              />
             </div>
             <div className="register_container-content_form-input">
               <label htmlFor="phoneNo">Phone no.</label>
               <input
-                type="number"
+                type="tel"
                 id="phoneNo"
                 placeholder="Enter your phone number"
+                onChange={validateInput}
+                value={userData.phoneNo}
               />
             </div>
             <div className="register_container-content_form-input_pass ">
@@ -65,6 +109,7 @@ export default function Register() {
                 type="password"
                 id="pass"
                 placeholder="Enter the password"
+                onChange={handleChange}
               />
             </div>
 
