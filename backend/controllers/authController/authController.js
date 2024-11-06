@@ -1,4 +1,5 @@
 import connectToDatabase from "../../db.js";
+import bcrypt from "bcryptjs";
 
 export const newUser = async (req, res) => {
   if (
@@ -13,6 +14,10 @@ export const newUser = async (req, res) => {
   }
 
   const { fName, lName, email, phoneNo, pass } = req.body;
+
+  const salt = bcrypt.genSaltSync(15);
+  const hashPass = bcrypt.hashSync(pass, salt);
+
   let dbConnection;
   try {
     dbConnection = await connectToDatabase();
@@ -22,7 +27,7 @@ export const newUser = async (req, res) => {
     }
     const [rows] = await dbConnection.query(
       "INSERT INTO auth (fName,lName,email,phone,password) VALUES (?, ?, ?, ?, ?)",
-      [fName, lName, email, phoneNo, pass]
+      [fName, lName, email, phoneNo, hashPass]
     );
     res.status(200).json({ msg: "User created successully" });
   } catch (error) {

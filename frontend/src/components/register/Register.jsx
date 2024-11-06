@@ -14,6 +14,7 @@ export default function Register() {
     phoneNo: "",
     pass: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -40,6 +41,7 @@ export default function Register() {
   }
 
   async function handleSubmit(e) {
+    setLoading(true);
     e.preventDefault();
 
     const res = await fetch("http://localhost:3000/auth/newUser", {
@@ -64,6 +66,8 @@ export default function Register() {
         navigate("/login");
       }, 3000);
     }
+
+    setLoading(false);
   }
 
   return (
@@ -133,7 +137,9 @@ export default function Register() {
               />
             </div>
 
-            <button>Sign Up</button>
+            <button disabled={loading}>
+              {loading ? "Signing up..." : "Sign Up"}
+            </button>
           </form>
           <p>
             Already have an account? <Link to="/login">Login</Link>
