@@ -1,1 +1,1 @@
-export { newUser } from "./authController/authController.js";
+export { newUser, getUser } from "./authController/authController.js";

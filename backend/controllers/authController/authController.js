@@ -2,25 +2,28 @@ import connectToDatabase from "../../db.js";
 import bcrypt from "bcryptjs";
 
 export const newUser = async (req, res) => {
-  if (
-    !req.body.fName ||
-    !req.body.lName ||
-    !req.body.email ||
-    !req.body.phoneNo ||
-    !req.body.pass
-  ) {
-    res.status(400).json({ msg: "Enter all the fields" });
-    return;
-  }
-
   const { fName, lName, email, phoneNo, pass } = req.body;
+
+  const missingFields = [];
+
+  if (!fName) missingFields.push("fName");
+  if (!lName) missingFields.push("lName");
+  if (!email) missingFields.push("email");
+  if (!phoneNo) missingFields.push("phoneNo");
+  if (!pass) missingFields.push("pass");
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      error: "Missing Fields",
+      missingFields,
+    });
+  }
 
   const salt = bcrypt.genSaltSync(15);
   const hashPass = bcrypt.hashSync(pass, salt);
 
-  let dbConnection;
   try {
-    dbConnection = await connectToDatabase();
+    const dbConnection = await connectToDatabase();
 
     if (!dbConnection) {
       throw new Error("No database connection");
@@ -36,9 +39,48 @@ export const newUser = async (req, res) => {
     if (error.code === "ER_DUP_ENTRY") {
       res.status(400).json({ error });
     } else {
-      res.status(500).send("Database query error");
+      res.status(500).json({ msg: "Database query error" });
     }
-  } finally {
-    if (dbConnection) await dbConnection.end();
+  }
+};
+
+export const getUser = async (req, res) => {
+  const { email, pass } = req.body;
+
+  const missingFields = [];
+
+  if (!email) missingFields.push("email");
+  if (!pass) missingFields.push("pass");
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({ error: "Missong Fields", missingFields });
+  }
+
+  try {
+    const dbConnection = await connectToDatabase();
+
+    if (!dbConnection) throw new Error("Database connection Error");
+
+    const [rows] = await dbConnection.query(
+      `SELECT * FROM auth WHERE email="${email}"`
+    );
+
+    if (rows.length <= 0) {
+      return res.status(400).json({ code: 11223, msg: "User does not exist" });
+    }
+
+    const dbPass = rows[0].password;
+
+    const isPasswordMatch = bcrypt.compareSync(pass, dbPass);
+
+    if (!isPasswordMatch) {
+      return res
+        .status(400)
+        .json({ code: 11224, msg: "Password does not match" });
+    }
+
+    res.status(200).json({ msg: "User authenticated successfull" });
+  } catch (error) {
+    res.status(500).json({ msg: "Internal error" });
   }
 };

@@ -29,11 +29,13 @@ export default function Register() {
 
   function handleChange(e) {
     const { id, value } = e.target;
+    document.getElementById(id).classList.remove("error");
     setUserData((prevData) => ({ ...prevData, [id]: value }));
   }
 
   function validateInput(e) {
     const { id, value } = e.target;
+    document.getElementById(id).classList.remove("error");
 
     if (/^\d*$/.test(value) && value.length <= 10) {
       setUserData((prevData) => ({ ...prevData, [id]: value }));
@@ -56,8 +58,11 @@ export default function Register() {
       toast.error("User does not created");
     } else if (data?.error?.code === "ER_DUP_ENTRY") {
       toast.error("Email already exists");
-    } else if (res.status === 400) {
+    } else if (res.status === 400 && data.missingFields) {
       toast.error("Enter all the fields");
+      data.missingFields.forEach((item) => {
+        document.getElementById(item).classList.add("error");
+      });
     } else if (res.status === 200) {
       toast.success("User created successfully", {
         autoClose: 3000,

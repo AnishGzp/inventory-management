@@ -41,6 +41,10 @@ input {
   font-size: var(--font-size-md);
 }
 
+input.error {
+  border: 1px solid red;
+}
+
 button {
   border: none;
   border-radius: 7px;

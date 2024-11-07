@@ -2,10 +2,16 @@ import "./login.css";
 
 import { Link } from "react-router-dom";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { loginPage } from "../../assets/index.js";
 
 export default function Login() {
+  const [userdata, setUserData] = useState({});
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     let prevTitle = document.title;
     document.title = `Login || ${prevTitle}`;
@@ -14,6 +20,52 @@ export default function Login() {
       document.title = prevTitle;
     };
   }, []);
+
+  const navigate = useNavigate();
+
+  function handleChange(e) {
+    const { id, value } = e.target;
+    document.getElementById(id).classList.remove("error");
+    setUserData((prevData) => ({ ...prevData, [id]: value }));
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:3000/auth/getUser", {
+        method: "POST",
+        body: JSON.stringify(userdata),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+
+      if (res.status === 400 && data?.missingFields) {
+        toast.error("Enter all the fields");
+        data.missingFields.forEach((item) => {
+          document.getElementById(item).classList.add("error");
+        });
+      } else if (res.status === 500) {
+        toast.error("Internal server error");
+      } else if (res.status === 400 && data?.code === 11223) {
+        toast.error("User does not exist");
+      } else if (res.status === 400 && data?.code === 11224) {
+        toast.error("Password does not match");
+      } else if (res.status === 200) {
+        toast.success("User authenticated successffull", { autoClose: 3000 });
+        setTimeout(() => {
+          navigate("/");
+        }, 3000);
+      }
+    } catch (error) {
+      toast.error("Something went wrong");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <section className="login">
@@ -25,13 +77,21 @@ export default function Login() {
               <p>See your growth and get support</p>
             </div>
           </div>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="login_container-content_form-input">
               <label htmlFor="email">Email</label>
-              <input type="email" id="email" placeholder="Enter your email" />
+              <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                onChange={handleChange}
+              />
             </div>
 
-            <div className="login_container-content_form-input ">
+            <div
+              className="login_container-content_form-input"
+              onChange={handleChange}
+            >
               <label htmlFor="pass">Password</label>
               <input
                 type="password"
@@ -40,7 +100,9 @@ export default function Login() {
               />
             </div>
 
-            <button>Sign Up</button>
+            <button disabled={loading}>
+              {loading ? "Signing-in..." : "Sign-in"}
+            </button>
           </form>
           <p>
             Not registered yet? <Link to="/register">Create a new account</Link>
@@ -51,6 +113,7 @@ export default function Login() {
           <img src={loginPage} alt="Login image" />
         </div>
       </div>
+      <ToastContainer position="bottom-right" />
     </section>
   );
 }
