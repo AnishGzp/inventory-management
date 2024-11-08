@@ -54,10 +54,11 @@ export default function Login() {
       } else if (res.status === 400 && data?.code === 11224) {
         toast.error("Password does not match");
       } else if (res.status === 200) {
-        toast.success("User authenticated successffull", { autoClose: 3000 });
+        toast.success("User authenticated successffull", { autoClose: 1500 });
+        localStorage.setItem("token", data.token);
         setTimeout(() => {
           navigate("/");
-        }, 3000);
+        }, 1500);
       }
     } catch (error) {
       toast.error("Something went wrong");

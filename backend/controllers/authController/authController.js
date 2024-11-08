@@ -1,5 +1,11 @@
 import connectToDatabase from "../../db.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+const secret = process.env.JWT_SECRET_KEY;
 
 export const newUser = async (req, res) => {
   const { fName, lName, email, phoneNo, pass } = req.body;
@@ -62,7 +68,8 @@ export const getUser = async (req, res) => {
     if (!dbConnection) throw new Error("Database connection Error");
 
     const [rows] = await dbConnection.query(
-      `SELECT * FROM auth WHERE email="${email}"`
+      `SELECT * FROM auth WHERE email=?`,
+      [email]
     );
 
     if (rows.length <= 0) {
@@ -79,7 +86,11 @@ export const getUser = async (req, res) => {
         .json({ code: 11224, msg: "Password does not match" });
     }
 
-    res.status(200).json({ msg: "User authenticated successfull" });
+    const token = jwt.sign({ email: rows[0].email }, secret, {
+      expiresIn: "1h",
+    });
+
+    res.status(200).json({ msg: "User authenticated successfull", token });
   } catch (error) {
     res.status(500).json({ msg: "Internal error" });
   }
