@@ -2,7 +2,7 @@ import "./App.css";
 
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { Login, Register } from "./components/index.js";
+import { Login, Register, Layout } from "./components/index.js";
 import { Home } from "./pages/index.js";
 
 export default function App() {
@@ -11,7 +11,9 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Home />} />
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+        </Route>
       </Routes>
     </main>
   );

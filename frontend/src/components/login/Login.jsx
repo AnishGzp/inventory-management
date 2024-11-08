@@ -11,17 +11,38 @@ import { loginPage } from "../../assets/index.js";
 export default function Login() {
   const [userdata, setUserData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [hasToken, setHasToken] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let prevTitle = document.title;
     document.title = `Login || ${prevTitle}`;
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setHasToken(true);
+    } else {
+      setHasToken(false);
+    }
 
     return () => {
       document.title = prevTitle;
     };
   }, []);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (hasToken) {
+      toast.success("Token exists! User authentication successfull", {
+        autoClose: 1500,
+      });
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    }
+  }, [hasToken, navigate]);
 
   function handleChange(e) {
     const { id, value } = e.target;
@@ -66,6 +87,10 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
+  }
+
+  if (hasToken === null) {
+    return <div>Loading...</div>;
   }
 
   return (
