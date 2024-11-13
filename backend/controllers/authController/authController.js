@@ -5,8 +5,10 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const secret = process.env.JWT_SECRET_KEY;
+const salt = bcrypt.genSaltSync(15);
+const secret = bcrypt.hashSync(process.env.JWT_SECRET_KEY, salt);
 
+// Create new User
 export const newUser = async (req, res) => {
   const { fName, lName, email, phoneNo, pass } = req.body;
 
@@ -25,7 +27,6 @@ export const newUser = async (req, res) => {
     });
   }
 
-  const salt = bcrypt.genSaltSync(15);
   const hashPass = bcrypt.hashSync(pass, salt);
 
   try {
@@ -50,6 +51,7 @@ export const newUser = async (req, res) => {
   }
 };
 
+// Get new user
 export const getUser = async (req, res) => {
   const { email, pass } = req.body;
 
@@ -95,3 +97,5 @@ export const getUser = async (req, res) => {
     res.status(500).json({ msg: "Internal error" });
   }
 };
+
+// Get email of user from token

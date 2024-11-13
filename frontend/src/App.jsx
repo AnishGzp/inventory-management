@@ -2,8 +2,8 @@ import "./App.css";
 
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import { Login, Register, Layout } from "./components/index.js";
-import { Home } from "./pages/index.js";
+import { Login, Register } from "./components";
+import { Home, Products, Layout } from "./pages";
 
 export default function App() {
   return (
@@ -13,6 +13,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
         </Route>
       </Routes>
     </main>

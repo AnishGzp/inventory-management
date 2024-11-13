@@ -1,0 +1,49 @@
+.navbar {
+  width: 150px;
+  height: 100%;
+
+  background-color: #b1b2ff;
+
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+
+  padding: 10px 0 20px;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.navbar_top,
+.navbar_bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.navbar_nav_items,
+.navbar_user {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+
+  padding: 0.5rem 0.3rem;
+
+  cursor: pointer;
+
+  transition: 0.5s;
+}
+
+.navbar_nav_items.active {
+  background-color: #ffcf9d;
+}
+
+.navbar button {
+  width: 100%;
+  background-color: var(--primary-color);
+}
