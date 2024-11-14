@@ -6,6 +6,7 @@
 
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
   flex-direction: column;
 
   padding: 10px 0 20px;
@@ -22,6 +23,7 @@
   align-items: center;
   flex-direction: column;
   gap: 20px;
+  width: 90%;
 }
 
 .navbar_nav_items,
@@ -36,11 +38,18 @@
 
   cursor: pointer;
 
-  transition: 0.5s;
+  transition: 0.5s ease-in-out;
 }
 
 .navbar_nav_items.active {
   background-color: #ffcf9d;
+  border-radius: 0 12px 12px 0;
+}
+
+.navbar_user {
+  font-weight: bold;
+  text-transform: capitalize;
+  color: #6420aa;
 }
 
 .navbar button {

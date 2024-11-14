@@ -3,7 +3,7 @@ import "./navbar.css";
 import React from "react";
 
 export default function Navbar(props) {
-  const { navItems, handleClick, active, handleLogout } = props;
+  const { navItems, handleClick, active, handleLogout, username } = props;
 
   return (
     <div className="navbar">
@@ -20,7 +20,7 @@ export default function Navbar(props) {
         ))}
       </div>
       <div className="navbar_bottom">
-        <div className="navbar_user">User</div>
+        <div className="navbar_user">{username}</div>
         <button onClick={handleLogout}>Logout</button>
       </div>
     </div>

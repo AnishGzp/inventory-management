@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const salt = bcrypt.genSaltSync(15);
-const secret = bcrypt.hashSync(process.env.JWT_SECRET_KEY, salt);
+const secret = process.env.JWT_SECRET_KEY;
 
 // Create new User
 export const newUser = async (req, res) => {
@@ -88,9 +88,13 @@ export const getUser = async (req, res) => {
         .json({ code: 11224, msg: "Password does not match" });
     }
 
-    const token = jwt.sign({ email: rows[0].email }, secret, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { email: rows[0].email, userName: rows[0].fName },
+      secret,
+      {
+        expiresIn: "1h",
+      }
+    );
 
     res.status(200).json({ msg: "User authenticated successfull", token });
   } catch (error) {
@@ -99,3 +103,14 @@ export const getUser = async (req, res) => {
 };
 
 // Get email of user from token
+export const getEmail = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ error: "unauthorized" });
+  try {
+    const decoded = jwt.verify(token, secret);
+    const username = decoded.userName;
+    res.json({ user: username });
+  } catch (error) {
+    res.status(401).json({ error: "invalid token" });
+  }
+};

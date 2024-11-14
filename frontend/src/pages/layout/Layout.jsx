@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 export default function Layout() {
   const [hasToken, setHasToken] = useState(null);
+  const [username, setUsername] = useState(null);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,6 +21,20 @@ export default function Layout() {
     } else {
       setHasToken(false);
     }
+
+    fetch("http://localhost:3000/auth/getEmail", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(async (res) => {
+      const data = await res.json();
+      setUsername(data.user);
+
+      if (res.status === 401) {
+        setHasToken(false);
+      }
+    });
   }, []);
 
   if (hasToken === null) {
@@ -73,6 +88,7 @@ export default function Layout() {
           handleClick={handleClick}
           active={active}
           handleLogout={handleLogout}
+          username={username}
         />
         <Outlet />
         <ToastContainer position="bottom-right" />
