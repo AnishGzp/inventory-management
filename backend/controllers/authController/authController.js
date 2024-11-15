@@ -92,7 +92,7 @@ export const getUser = async (req, res) => {
       { email: rows[0].email, userName: rows[0].fName },
       secret,
       {
-        expiresIn: "1h",
+        expiresIn: "6h",
       }
     );
 

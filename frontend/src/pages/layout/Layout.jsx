@@ -32,6 +32,7 @@ export default function Layout() {
       setUsername(data.user);
 
       if (res.status === 401) {
+        localStorage.removeItem("token");
         setHasToken(false);
       }
     });

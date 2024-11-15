@@ -6,10 +6,10 @@
 
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   flex-direction: column;
 
-  padding: 10px 0 20px;
+  padding: 10px 7px 20px 0;
 
   position: fixed;
   top: 0;
@@ -23,7 +23,7 @@
   align-items: center;
   flex-direction: column;
   gap: 20px;
-  width: 90%;
+  width: 100%;
 }
 
 .navbar_nav_items,
@@ -43,16 +43,16 @@
 
 .navbar_nav_items.active {
   background-color: #ffcf9d;
-  border-radius: 0 12px 12px 0;
+  border-radius: 0 20px 20px 0;
 }
 
 .navbar_user {
-  font-weight: bold;
+  font-weight: 500;
   text-transform: capitalize;
-  color: #6420aa;
+  cursor: text;
 }
 
 .navbar button {
-  width: 100%;
+  width: 80%;
   background-color: var(--primary-color);
 }

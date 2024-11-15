@@ -1,0 +1,19 @@
+.tableInfo {
+  width: 100%;
+}
+
+.tableInfo_container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  flex-direction: column;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  border: 1px solid black;
+}

@@ -64,6 +64,19 @@ button:hover {
   box-shadow: inset -0px -0px 6px 5px var(--primary-color);
 }
 
+.title {
+  padding: 12px;
+
+  border-radius: 7px;
+
+  width: 100%;
+
+  background-color: var(--light-dark-backgrund);
+
+  font-weight: 600;
+  font-size: 26px;
+}
+
 @media screen and (max-width: 550px) {
   label,
   button,
