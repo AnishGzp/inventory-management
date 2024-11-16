@@ -1,5 +1,9 @@
 .addInput {
   width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .addInput form {
@@ -7,4 +11,9 @@
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.addInput form button {
+  width: 50%;
 }

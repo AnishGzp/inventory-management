@@ -10,23 +10,29 @@ export const addProducts = [
     type: "text",
   },
   {
-    id: "category",
-    placeholder: "Enter the category",
-    type: "text",
-  },
-  {
     id: "desc",
     placeholder: "Enter the description",
     type: "text",
   },
   {
-    id: "quntity",
+    id: "quantity",
     placeholder: "Enter the Quantity",
-    type: "text",
+    type: "number",
   },
   {
     id: "price",
     placeholder: "Enter the selling price",
     type: "number",
+  },
+];
+
+export const addProductSelect = [
+  {
+    id: "category",
+    values: [{ value: "Playable" }, { value: "Machine" }, { value: "Rock" }],
+  },
+  {
+    id: "vendor",
+    values: [{ value: "Anish" }, { value: "Manish" }],
   },
 ];

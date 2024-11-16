@@ -29,7 +29,8 @@ label {
   font-size: var(--font-size-md);
 }
 
-input {
+input,
+select {
   border: 1px solid #888;
   outline: none;
   border-radius: 7px;
@@ -41,7 +42,8 @@ input {
   font-size: var(--font-size-md);
 }
 
-input.error {
+input.error,
+select.error {
   border: 1px solid red;
 }
 
