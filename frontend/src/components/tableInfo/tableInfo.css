@@ -12,9 +12,25 @@
 
 table {
   width: 100%;
+  text-align: center;
 }
 
 th {
-  border: 1px solid black;
   font-weight: 600;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  border: 1px solid black;
+}
+
+.table_button {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.table_button button {
+  width: 40%;
 }

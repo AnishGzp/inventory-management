@@ -1,11 +1,6 @@
 import connectToDatabase from "../../db.js";
-import dotenv from "dotenv";
-import jwt from "jsonwebtoken";
 
-dotenv.config();
-
-const secret = process.env.JWT_SECRET_KEY;
-
+// Add Product
 export const addProduct = async (req, res) => {
   console.log(req.body);
 
@@ -44,5 +39,20 @@ export const addProduct = async (req, res) => {
     } else {
       res.status(500).json({ msg: "Database query error" });
     }
+  }
+};
+
+// Get All Product
+export const getProduct = async (req, res) => {
+  try {
+    const dbConnection = await connectToDatabase();
+    if (!dbConnection) throw new Error("Database connection failed");
+
+    const [rows] = await dbConnection.query("SELECT * FROM product");
+    console.log(rows);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: "Internal error" });
   }
 };
