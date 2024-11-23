@@ -2,9 +2,11 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import {
-  addContentRoute,
+  addRoute,
   authRoute,
-  getContentRoute,
+  deleteRoute,
+  editRoute,
+  getRoute,
 } from "./routes/routes.js";
 
 dotenv.config();
@@ -15,8 +17,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoute);
-app.use("/add", addContentRoute);
-app.use("/", getContentRoute);
+// Add contents routes
+app.use("/add", addRoute);
+// Get contents routes
+app.use("/", getRoute);
+// Edit contents routes
+app.use("/edit", editRoute);
+// Delete contents routes
+app.use("/delete", deleteRoute);
 
 const PORT = process.env.PORT || 4000;
 

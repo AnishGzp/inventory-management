@@ -16,7 +16,6 @@ async function connectToDatabase() {
       password: pass,
       database: database,
     });
-    console.log("Database is connected");
 
     return db;
   } catch (err) {

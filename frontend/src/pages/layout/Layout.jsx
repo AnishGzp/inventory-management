@@ -92,7 +92,7 @@ export default function Layout() {
           username={username}
         />
         <Outlet />
-        <ToastContainer position="bottom-right" />
+        <ToastContainer position="bottom-right" autoClose="1500" />
       </div>
     </>
   );

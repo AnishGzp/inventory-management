@@ -1,3 +1,5 @@
 export { default as authRoute } from "./authRoute/authRoute.js";
-export { default as addContentRoute } from "./addContentRoute/addContentRoute.js";
-export { default as getContentRoute } from "./getContentRoute/getContentRoute.js";
+export { default as addRoute } from "./addRoute/addRoute.js";
+export { default as getRoute } from "./getRoute/getRoute.js";
+export { default as editRoute } from "./editRoute/editRoute.js";
+export { default as deleteRoute } from "./deleteRoute/deleteRoute.js";

@@ -62,11 +62,11 @@ export default function AddProducts() {
       <div className="addProducts_container">
         <AddInput
           title="Products"
-          addProducts={addProducts}
+          addContents={addProducts}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           select={true}
-          addProductSelect={addProductSelect}
+          addSelect={addProductSelect}
         />
       </div>
       <ToastContainer position="bottom-right" autoClose="2000" />

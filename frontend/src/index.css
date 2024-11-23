@@ -73,7 +73,7 @@ button:hover {
 
   width: 100%;
 
-  background-color: var(--light-dark-backgrund);
+  /* background-color: var(--primary-color); */
 
   font-weight: 600;
   font-size: 26px;

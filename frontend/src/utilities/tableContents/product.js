@@ -5,5 +5,6 @@ export const productTitle = [
   "Category",
   "Quantity",
   "Selling Price",
+  "Vendor",
   "Actions",
 ];

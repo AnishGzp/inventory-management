@@ -2,13 +2,13 @@ import "./tableInfo.css";
 
 import React from "react";
 
-export default function TableInfo(props) {
-  const { productTitle, title, prouctData } = props;
+export default function ProductTableInfo(props) {
+  const { productTitle, title, prouctData, handleDelete } = props;
   return (
     <div className="tableInfo">
       <div className="tableInfo_container">
         <div className="title">All {title}</div>
-        <table>
+        <table cellSpacing={0}>
           <thead>
             <tr>
               {productTitle.map((item, index) => (
@@ -16,6 +16,7 @@ export default function TableInfo(props) {
               ))}
             </tr>
           </thead>
+
           <tbody>
             {prouctData && prouctData.length > 0 ? (
               prouctData.map((item, index) => (
@@ -26,9 +27,12 @@ export default function TableInfo(props) {
                   <td>{item.category}</td>
                   <td>{item.quantity}</td>
                   <td>{item.price}</td>
+                  <td>{item.vendor}</td>
                   <td className="table_button">
                     <button>Edit</button>
-                    <button>Delete</button>
+                    <button onClick={() => handleDelete(item.skuNo)}>
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))

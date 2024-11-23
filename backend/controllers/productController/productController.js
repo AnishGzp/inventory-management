@@ -49,10 +49,35 @@ export const getProduct = async (req, res) => {
     if (!dbConnection) throw new Error("Database connection failed");
 
     const [rows] = await dbConnection.query("SELECT * FROM product");
-    console.log(rows);
     res.status(200).json(rows);
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Internal error" });
+  }
+};
+
+// Edit products
+export const editProduct = async (req, res) => {};
+
+// Delete products
+export const deleteProduct = async (req, res) => {
+  const { skuNo } = req.params;
+
+  try {
+    const dbConnection = await connectToDatabase();
+    if (!dbConnection) throw new Error("Database connection failed");
+
+    const [rows] = await dbConnection.execute(
+      "DELETE FROM product WHERE skuNO = ? ",
+      [skuNo]
+    );
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ msg: "Product not found" });
+    }
+    res.status(200).json({ msg: "Product deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ msg: error.message });
   }
 };

@@ -3,8 +3,9 @@ import "./product.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { SearchAdd, TableInfo } from "../../components";
+import { SearchAdd, ProductTableInfo } from "../../components";
 import { productTitle } from "../../utilities";
+import { toast } from "react-toastify";
 
 export default function Products() {
   const [prouctData, setProductData] = useState([]);
@@ -34,7 +35,23 @@ export default function Products() {
         })
       : prouctData;
 
-  console.log(filteredData);
+  function handleDelete(skuNo) {
+    const delteAlert = window.confirm("Delete the product");
+    if (delteAlert) {
+      fetch(`http://localhost:3000/delete/product/${skuNo}`).then((res) => {
+        if (res.status === 500) {
+          toast.error("Internal server error");
+        } else if (res.status === 404) {
+          toast.error("Product not found");
+        } else if (res.status === 200) {
+          toast.success("Product deleted successfully");
+          setProductData((prevData) =>
+            prevData.filter((item) => item.skuNo !== skuNo)
+          );
+        }
+      });
+    } else return;
+  }
 
   return (
     <div className="product">
@@ -45,10 +62,11 @@ export default function Products() {
           }}
           setSearchQuery={setSearchQuery}
         />
-        <TableInfo
+        <ProductTableInfo
           title="products"
           productTitle={productTitle}
           prouctData={filteredData}
+          handleDelete={handleDelete}
         />
       </div>
     </div>
