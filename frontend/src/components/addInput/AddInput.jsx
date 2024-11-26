@@ -7,7 +7,7 @@ export default function AddInput(props) {
     props;
   return (
     <div className="addInput">
-      <div className="title">Add {title}</div>
+      <div className="title">{title}</div>
       <form>
         {addContents.map((item, index) => (
           <input
@@ -16,6 +16,7 @@ export default function AddInput(props) {
             id={item.id}
             placeholder={item.placeholder}
             onChange={handleChange}
+            readOnly={item.readOnly}
           />
         ))}
         {select &&
@@ -29,7 +30,7 @@ export default function AddInput(props) {
               ))}
             </select>
           ))}
-        <button onClick={handleSubmit}>Add {title}</button>
+        <button onClick={handleSubmit}>{title}</button>
       </form>
     </div>
   );

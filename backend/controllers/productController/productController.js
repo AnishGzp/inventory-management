@@ -57,7 +57,9 @@ export const getProduct = async (req, res) => {
 };
 
 // Edit products
-export const editProduct = async (req, res) => {};
+export const editProduct = async (req, res) => {
+  res.json({ msg: "Working" });
+};
 
 // Delete products
 export const deleteProduct = async (req, res) => {

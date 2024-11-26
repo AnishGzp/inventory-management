@@ -1,9 +1,9 @@
-export const addProducts = [
+export const editProducts = [
   {
     id: "skuNo",
     placeholder: "Enter the SKU number",
     type: "text",
-    readOnly: false,
+    readOnly: true,
   },
   {
     id: "name",
@@ -31,7 +31,7 @@ export const addProducts = [
   },
 ];
 
-export const addProductSelect = [
+export const editProductSelect = [
   {
     id: "category",
     values: [{ value: "Playable" }, { value: "Machine" }, { value: "Rock" }],

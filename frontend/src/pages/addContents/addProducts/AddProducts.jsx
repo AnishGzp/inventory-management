@@ -1,10 +1,10 @@
-import "./addProducts.css";
+import "../style.css";
 
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AddInput } from "../../components";
-import { addProducts, addProductSelect } from "../../utilities";
+import { AddInput } from "../../../components";
+import { addProducts, addProductSelect } from "../../../utilities";
 import { useNavigate } from "react-router-dom";
 
 export default function AddProducts() {
@@ -61,7 +61,7 @@ export default function AddProducts() {
     <div className="addProducts">
       <div className="addProducts_container">
         <AddInput
-          title="Products"
+          title="Add Products"
           addContents={addProducts}
           handleChange={handleChange}
           handleSubmit={handleSubmit}

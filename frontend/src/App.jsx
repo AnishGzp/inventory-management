@@ -3,7 +3,7 @@ import "./App.css";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
 import { Login, Register } from "./components";
-import { Home, Products, Layout, AddProducts } from "./pages";
+import { Home, Products, Layout, AddProducts, EditProducts } from "./pages";
 
 export default function App() {
   return (
@@ -16,6 +16,7 @@ export default function App() {
           <Route path="/products" element={<Products />} />
 
           <Route path="/products/addProducts" element={<AddProducts />} />
+          <Route path="/products/editProducts" element={<EditProducts />} />
         </Route>
       </Routes>
     </main>

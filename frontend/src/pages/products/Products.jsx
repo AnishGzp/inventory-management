@@ -23,9 +23,6 @@ export default function Products() {
     getProduct();
   }, []);
 
-  console.log(searchQuery);
-  console.log(prouctData);
-
   const filteredData =
     searchQuery.trim() !== ""
       ? prouctData.filter((item) => {
@@ -57,6 +54,7 @@ export default function Products() {
     <div className="product">
       <div className="product_container">
         <SearchAdd
+          title="products"
           handleClick={() => {
             navigate("/products/addProducts");
           }}
@@ -67,6 +65,9 @@ export default function Products() {
           productTitle={productTitle}
           prouctData={filteredData}
           handleDelete={handleDelete}
+          handleEdit={() => {
+            navigate("/products/editProducts");
+          }}
         />
       </div>
     </div>
