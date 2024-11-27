@@ -4,6 +4,6 @@ import { editProduct } from "../../controllers/controllers.js";
 const editRoute = express.Router();
 
 //Edit products
-editRoute.post("/product/:skuNo", editProduct);
+editRoute.post("/products/:skuNo", editProduct);
 
 export default editRoute;

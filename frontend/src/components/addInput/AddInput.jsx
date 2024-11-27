@@ -3,8 +3,15 @@ import "./addInput.css";
 import React from "react";
 
 export default function AddInput(props) {
-  const { addContents, title, handleChange, handleSubmit, select, addSelect } =
-    props;
+  const {
+    addContents,
+    title,
+    handleChange,
+    handleSubmit,
+    select,
+    addSelect,
+    loading,
+  } = props;
   return (
     <div className="addInput">
       <div className="title">{title}</div>
@@ -17,11 +24,17 @@ export default function AddInput(props) {
             placeholder={item.placeholder}
             onChange={handleChange}
             readOnly={item.readOnly}
+            value={item.value}
           />
         ))}
         {select &&
           addSelect.map((item, index) => (
-            <select key={index} id={item.id} onChange={handleChange}>
+            <select
+              key={index}
+              id={item.id}
+              value={item?.value}
+              onChange={handleChange}
+            >
               <option value="">Select the {item.id}</option>
               {item.values.map((option, index) => (
                 <option key={index} value={option.value}>
@@ -30,7 +43,9 @@ export default function AddInput(props) {
               ))}
             </select>
           ))}
-        <button onClick={handleSubmit}>{title}</button>
+        <button disabled={loading} onClick={handleSubmit}>
+          {!loading ? title : `Updating product`}
+        </button>
       </form>
     </div>
   );

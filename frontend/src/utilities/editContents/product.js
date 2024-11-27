@@ -12,7 +12,7 @@ export const editProducts = [
     readOnly: false,
   },
   {
-    id: "desc",
+    id: "description",
     placeholder: "Enter the description",
     type: "text",
     readOnly: false,

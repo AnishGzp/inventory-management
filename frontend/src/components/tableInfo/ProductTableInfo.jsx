@@ -30,7 +30,7 @@ export default function ProductTableInfo(props) {
                   <td>{item.price}</td>
                   <td>{item.vendor}</td>
                   <td className="table_button">
-                    <button onClick={handleEdit}>Edit</button>
+                    <button onClick={() => handleEdit(item)}>Edit</button>
                     <button onClick={() => handleDelete(item.skuNo)}>
                       Delete
                     </button>

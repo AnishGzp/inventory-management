@@ -65,8 +65,8 @@ export default function Products() {
           productTitle={productTitle}
           prouctData={filteredData}
           handleDelete={handleDelete}
-          handleEdit={() => {
-            navigate("/products/editProducts");
+          handleEdit={(item) => {
+            navigate("/products/editProducts", { state: { item } });
           }}
         />
       </div>
