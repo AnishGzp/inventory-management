@@ -70,3 +70,38 @@ export const addVendor = async (req, res) => {
     }
   }
 };
+
+// Edit products
+export const editVendor = async (req, res) => {
+  const { name, id } = req.body;
+
+  const missingFields = [];
+
+  if (!name) missingFields.push("name");
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({ missingFields });
+  }
+
+  try {
+    const dbConnection = await connectToDatabase();
+    if (!dbConnection) throw new Error("Database connection failed");
+
+    const [rows] = await dbConnection.execute(
+      "UPDATE vendor SET name=? WHERE id=?",
+      [name, id]
+    );
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ msg: "Vendor not found" });
+    }
+    res.status(200).json({ msg: "Vendor updated successfully" });
+  } catch (error) {
+    console.log(error);
+    if (error.code === "ER_DUP_ENTRY") {
+      res.status(400).json({ error });
+    } else {
+      res.status(500).json({ msg: "Database query error" });
+    }
+  }
+};

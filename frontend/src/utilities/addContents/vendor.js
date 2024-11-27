@@ -1,3 +1,4 @@
+// Can use for edit too no change needed
 export const addVendors = [
   {
     id: "name",

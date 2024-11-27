@@ -23,8 +23,6 @@ export default function Products() {
     getVendor();
   }, []);
 
-  console.log(vendorData);
-
   const filteredData =
     searchQuery.trim() !== ""
       ? vendorData.filter((item) => {
@@ -45,7 +43,7 @@ export default function Products() {
         } else if (res.status === 200) {
           toast.success("Vendor deleted successfully");
           setVendorData((prevData) =>
-            prevData.filter((item) => item.skuNo !== skuNo)
+            prevData.filter((item) => item.name !== name)
           );
         }
       });
@@ -68,7 +66,7 @@ export default function Products() {
           vendorData={filteredData}
           handleDelete={handleDelete}
           handleEdit={(item) => {
-            navigate("/products/editProducts", { state: { item } });
+            navigate("/vendor/editVendor", { state: { item } });
           }}
         />
       </div>

@@ -11,6 +11,7 @@ import {
   EditProducts,
   Vendor,
   AddVendors,
+  EditVendor,
 } from "./pages";
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
           {/* Vendor Routes */}
           <Route path="/vendor" element={<Vendor />} />
           <Route path="/products/addVendor" element={<AddVendors />} />
+          <Route path="/vendor/editVendor" element={<EditVendor />} />
         </Route>
       </Routes>
     </main>

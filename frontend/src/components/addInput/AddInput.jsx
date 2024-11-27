@@ -44,7 +44,7 @@ export default function AddInput(props) {
             </select>
           ))}
         <button disabled={loading} onClick={handleSubmit}>
-          {!loading ? title : `Updating product`}
+          {!loading ? title : `Loading...`}
         </button>
       </form>
     </div>

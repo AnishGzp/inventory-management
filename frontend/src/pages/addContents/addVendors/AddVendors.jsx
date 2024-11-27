@@ -46,10 +46,10 @@ export default function AddVendors() {
         setLoading(false);
         toast.error("Name already exist");
       } else if (res.status === 200) {
-        setLoading(false);
         toast.success("Vendor addded successfully");
         setTimeout(() => {
           navigate("/vendor");
+          setLoading(false);
         }, 2000);
       }
     } catch (error) {

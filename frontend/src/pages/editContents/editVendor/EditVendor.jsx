@@ -1,30 +1,41 @@
 import "../style.css";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AddInput } from "../../../components";
-import { addProducts, addProductSelect } from "../../../utilities";
-import { useNavigate } from "react-router-dom";
 
-export default function AddProducts() {
-  const [productdata, setProductData] = useState({
-    skuNo: "",
+import { AddInput } from "../../../components";
+import { addVendors as originalAddVendors } from "../../../utilities";
+import { useNavigate, useLocation } from "react-router-dom";
+
+export default function EditVendor() {
+  const [vendorData, setVendorData] = useState({
     name: "",
-    category: "",
-    desc: "",
-    quantity: "",
-    price: "",
-    vendor: "",
   });
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const { item } = location.state || {};
+
+  console.log(item);
+
+  useEffect(() => {
+    if (item) {
+      setVendorData(item);
+    }
+  }, [item]);
+
+  const addVendors = originalAddVendors.map((field) => ({
+    ...field,
+    value: vendorData[field.id],
+  }));
 
   function handleChange(e) {
     const { id, value } = e.target;
     document.getElementById(id).classList.remove("error");
-    setProductData((prevData) => ({ ...prevData, [id]: value }));
+    setVendorData((prevData) => ({ ...prevData, [id]: value }));
   }
 
   async function handleSubmit(e) {
@@ -32,11 +43,14 @@ export default function AddProducts() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/add/products", {
-        method: "POST",
-        body: JSON.stringify(productdata),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `http://localhost:3000/edit/vendor/${vendorData.name}`,
+        {
+          method: "POST",
+          body: JSON.stringify(vendorData),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = await res.json();
       if (res.status === 400 && data.missingFields) {
@@ -50,11 +64,11 @@ export default function AddProducts() {
         toast.error("Internal server error");
       } else if (res.status === 400 && data.error.code === "ER_DUP_ENTRY") {
         setLoading(false);
-        toast.error("SKU already exist");
+        toast.error("Vendor name already exist");
       } else if (res.status === 200) {
-        toast.success("Product addded successfully");
+        toast.success("Vendor edited successfully");
         setTimeout(() => {
-          navigate("/products");
+          navigate("/vendor");
           setLoading(false);
         }, 2000);
       }
@@ -65,15 +79,14 @@ export default function AddProducts() {
     }
   }
   return (
-    <div className="addProducts">
+    <div className="editProducts">
       <div className="addProducts_container">
         <AddInput
-          title="Add Products"
-          addContents={addProducts}
+          title="Edit Products"
+          addContents={addVendors}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
-          select={true}
-          addSelect={addProductSelect}
+          select={false}
           loading={loading}
         />
       </div>

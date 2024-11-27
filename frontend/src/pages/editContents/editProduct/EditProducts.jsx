@@ -78,10 +78,10 @@ export default function EditProducts() {
         setLoading(false);
         toast.error("SKU already exist");
       } else if (res.status === 200) {
-        setLoading(false);
         toast.success("Product edited successfully");
         setTimeout(() => {
           navigate("/products");
+          setLoading(false);
         }, 2000);
       }
     } catch (error) {

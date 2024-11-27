@@ -9,4 +9,5 @@ export {
   getVendor,
   deleteVendor,
   addVendor,
+  editVendor,
 } from "./vendorController/vendorController.js";
