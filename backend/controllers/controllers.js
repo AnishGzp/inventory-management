@@ -5,3 +5,8 @@ export {
   editProduct,
   deleteProduct,
 } from "./productController/productController.js";
+export {
+  getVendor,
+  deleteVendor,
+  addVendor,
+} from "./vendorController/vendorController.js";

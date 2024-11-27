@@ -1,4 +1,4 @@
-import "./tableInfo.css";
+import "../tableInfo.css";
 
 import React from "react";
 
