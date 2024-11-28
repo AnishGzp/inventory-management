@@ -12,6 +12,9 @@ import {
   Vendor,
   AddVendors,
   EditVendor,
+  Category,
+  EditCategory,
+  AddCategory,
 } from "./pages";
 
 export default function App() {
@@ -28,8 +31,12 @@ export default function App() {
           <Route path="/products/editProducts" element={<EditProducts />} />
           {/* Vendor Routes */}
           <Route path="/vendor" element={<Vendor />} />
-          <Route path="/products/addVendor" element={<AddVendors />} />
+          <Route path="/vendor/addVendor" element={<AddVendors />} />
           <Route path="/vendor/editVendor" element={<EditVendor />} />
+          {/* Category Routes */}
+          <Route path="/category" element={<Category />} />
+          <Route path="/category/AddCategory" element={<AddCategory />} />
+          <Route path="/category/editCategory" element={<EditCategory />} />
         </Route>
       </Routes>
     </main>

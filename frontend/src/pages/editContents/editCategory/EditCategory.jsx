@@ -5,11 +5,11 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { AddInput } from "../../../components";
-import { addVendors as originalAddVendors } from "../../../utilities";
+import { addCategory as originaladdCategory } from "../../../utilities";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export default function EditVendor() {
-  const [vendorData, setVendorData] = useState({
+export default function EditCategory() {
+  const [categoryData, setCategoryData] = useState({
     name: "",
   });
   const [loading, setLoading] = useState(false);
@@ -19,23 +19,21 @@ export default function EditVendor() {
 
   const { item } = location.state || {};
 
-  console.log(item);
-
   useEffect(() => {
     if (item) {
-      setVendorData(item);
+      setCategoryData(item);
     }
   }, [item]);
 
-  const addVendors = originalAddVendors.map((field) => ({
+  const addCategory = originaladdCategory.map((field) => ({
     ...field,
-    value: vendorData[field.id],
+    value: categoryData[field.id],
   }));
 
   function handleChange(e) {
     const { id, value } = e.target;
     document.getElementById(id).classList.remove("error");
-    setVendorData((prevData) => ({ ...prevData, [id]: value }));
+    setCategoryData((prevData) => ({ ...prevData, [id]: value }));
   }
 
   async function handleSubmit(e) {
@@ -44,10 +42,10 @@ export default function EditVendor() {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/edit/vendor/${vendorData.name}`,
+        `http://localhost:3000/edit/category/${categoryData.name}`,
         {
           method: "POST",
-          body: JSON.stringify(vendorData),
+          body: JSON.stringify(categoryData),
           headers: { "Content-Type": "application/json" },
         }
       );
@@ -64,11 +62,11 @@ export default function EditVendor() {
         toast.error("Internal server error");
       } else if (res.status === 400 && data.error.code === "ER_DUP_ENTRY") {
         setLoading(false);
-        toast.error("Vendor name already exist");
+        toast.error("Category name already exist");
       } else if (res.status === 200) {
-        toast.success("Vendor edited successfully");
+        toast.success("Category edited successfully");
         setTimeout(() => {
-          navigate("/vendor");
+          navigate("/category");
           setLoading(false);
         }, 2000);
       }
@@ -82,8 +80,8 @@ export default function EditVendor() {
     <div className="editProducts">
       <div className="addProducts_container">
         <AddInput
-          title="Edit Vendor"
-          addContents={addVendors}
+          title="Edit Category"
+          addContents={addCategory}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           select={false}

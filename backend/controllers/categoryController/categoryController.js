@@ -1,12 +1,12 @@
 import connectToDatabase from "../../db.js";
 
-// Get All Vendors
-export const getVendor = async (req, res) => {
+// Get All Category
+export const getCategory = async (req, res) => {
   try {
     const dbConnection = await connectToDatabase();
     if (!dbConnection) throw new Error("Database connection failed");
 
-    const [rows] = await dbConnection.query("SELECT * FROM vendor");
+    const [rows] = await dbConnection.query("SELECT * FROM category");
     res.status(200).json(rows);
   } catch (error) {
     console.log(error);
@@ -14,8 +14,8 @@ export const getVendor = async (req, res) => {
   }
 };
 
-// Delete Vendors
-export const deleteVendor = async (req, res) => {
+// Delete Category
+export const deleteCategory = async (req, res) => {
   const { name } = req.params;
 
   try {
@@ -23,22 +23,59 @@ export const deleteVendor = async (req, res) => {
     if (!dbConnection) throw new Error("Database connection failed");
 
     const [rows] = await dbConnection.execute(
-      "DELETE FROM vendor WHERE name = ? ",
+      "DELETE FROM category WHERE name = ? ",
       [name]
     );
 
     if (rows.affectedRows === 0) {
-      return res.status(404).json({ msg: "Vendor not found" });
+      return res.status(404).json({ msg: "Category not found" });
     }
-    res.status(200).json({ msg: "Vendor deleted successfully" });
+    res.status(200).json({ msg: "Category deleted successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: error.message });
   }
 };
 
-// Add Vendors
-export const addVendor = async (req, res) => {
+// Edit Categoryy
+export const editCategory = async (req, res) => {
+  const { name, id } = req.body;
+
+  console.log(name);
+
+  const missingFields = [];
+
+  if (!name) missingFields.push("name");
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({ missingFields });
+  }
+
+  try {
+    const dbConnection = await connectToDatabase();
+    if (!dbConnection) throw new Error("Database connection failed");
+
+    const [rows] = await dbConnection.execute(
+      "UPDATE category SET name=? WHERE id=?",
+      [name, id]
+    );
+
+    if (rows.affectedRows === 0) {
+      return res.status(404).json({ msg: "Category not found" });
+    }
+    res.status(200).json({ msg: "Category updated successfully" });
+  } catch (error) {
+    console.log(error);
+    if (error.code === "ER_DUP_ENTRY") {
+      res.status(400).json({ error });
+    } else {
+      res.status(500).json({ msg: "Database query error" });
+    }
+  }
+};
+
+// Add Category
+export const addCategory = async (req, res) => {
   const { name } = req.body;
 
   const missingFields = [];
@@ -56,48 +93,13 @@ export const addVendor = async (req, res) => {
     }
 
     const [rows] = await dbConnection.query(
-      "INSERT INTO vendor (name) VALUES (?)",
+      "INSERT INTO category (name) VALUES (?)",
       [name]
     );
-    res.status(200).json({ msg: "Vendor added successfully" });
+    res.status(200).json({ msg: "category added successfully" });
   } catch (error) {
     console.log(error);
 
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
-    } else {
-      res.status(500).json({ msg: "Database query error" });
-    }
-  }
-};
-
-// Edit Vendors
-export const editVendor = async (req, res) => {
-  const { name, id } = req.body;
-
-  const missingFields = [];
-
-  if (!name) missingFields.push("name");
-
-  if (missingFields.length > 0) {
-    return res.status(400).json({ missingFields });
-  }
-
-  try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.execute(
-      "UPDATE vendor SET name=? WHERE id=?",
-      [name, id]
-    );
-
-    if (rows.affectedRows === 0) {
-      return res.status(404).json({ msg: "Vendor not found" });
-    }
-    res.status(200).json({ msg: "Vendor updated successfully" });
-  } catch (error) {
-    console.log(error);
     if (error.code === "ER_DUP_ENTRY") {
       res.status(400).json({ error });
     } else {

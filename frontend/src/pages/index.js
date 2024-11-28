@@ -10,3 +10,9 @@ export { default as EditProducts } from "./editContents/editProduct/EditProducts
 export { default as Vendor } from "./vendors/Vendor";
 export { default as AddVendors } from "./addContents/addVendors/AddVendors";
 export { default as EditVendor } from "./editContents/editVendor/EditVendor";
+
+// Category exports
+
+export { default as Category } from "./category/Category";
+export { default as EditCategory } from "./editContents/editCategory/EditCategory";
+export { default as AddCategory } from "./addContents/addCategory/AddCategory";
