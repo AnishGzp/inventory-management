@@ -1,10 +1,10 @@
 import "../style.css";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AddInput } from "../../../components";
-import { addProducts, addProductSelect } from "../../../utilities";
+import { addProducts } from "../../../utilities";
 import { useNavigate } from "react-router-dom";
 
 export default function AddProducts() {
@@ -17,9 +17,54 @@ export default function AddProducts() {
     price: "",
     vendor: "",
   });
+
+  const [addProductSelect, setAddProductSelect] = useState([
+    {
+      id: "category",
+      values: [],
+    },
+    {
+      id: "vendor",
+      values: [],
+    },
+  ]);
+
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  async function getCategory() {
+    const res = await fetch("http://localhost:3000/category");
+    const data = await res.json();
+
+    const categoryValue = data.map((item) => ({ value: item.name }));
+
+    setAddProductSelect((prevData) =>
+      prevData.map((field) =>
+        field.id === "category" ? { ...field, values: categoryValue } : field
+      )
+    );
+  }
+
+  async function getVendor() {
+    const res = await fetch("http://localhost:3000/vendors");
+    const data = await res.json();
+
+    console.log(data);
+
+    const vendorValue = data.map((item) => ({ value: item.name }));
+
+    setAddProductSelect((prevData) =>
+      prevData.map((field) =>
+        field.id === "vendor" ? { ...field, values: vendorValue } : field
+      )
+    );
+  }
+
+  useEffect(() => {
+    getCategory();
+    getVendor();
+  }, []);
 
   function handleChange(e) {
     const { id, value } = e.target;

@@ -30,14 +30,3 @@ export const addProducts = [
     readOnly: false,
   },
 ];
-
-export const addProductSelect = [
-  {
-    id: "category",
-    values: [{ value: "Playable" }, { value: "Machine" }, { value: "Rock" }],
-  },
-  {
-    id: "vendor",
-    values: [{ value: "Anish" }, { value: "Manish" }],
-  },
-];
