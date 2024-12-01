@@ -16,3 +16,6 @@ export { default as EditVendor } from "./editContents/editVendor/EditVendor";
 export { default as Category } from "./category/Category";
 export { default as EditCategory } from "./editContents/editCategory/EditCategory";
 export { default as AddCategory } from "./addContents/addCategory/AddCategory";
+
+// Sales exports
+export { default as Sales } from "./sales/Sales";

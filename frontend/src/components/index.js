@@ -6,4 +6,5 @@ export { default as SearchAdd } from "./searchAdd/SearchAdd";
 export { default as ProductTableInfo } from "./tableInfo/productTableInfo/ProductTableInfo";
 export { default as VendorTableInfo } from "./tableInfo/vendorTableInfo/VendoTableInfo";
 export { default as CategoryTableInfo } from "./tableInfo/categoryTableInfo/CategoryTableInfo";
+export { default as SalesTableInfo } from "./tableInfo/salesTableInfo/SalesTableInfo";
 export { default as AddInput } from "./addInput/AddInput";

@@ -7,7 +7,7 @@ import { SearchAdd, VendorTableInfo } from "../../components";
 import { vendorTitle } from "../../utilities";
 import { toast } from "react-toastify";
 
-export default function Products() {
+export default function Vendor() {
   const [vendorData, setVendorData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();

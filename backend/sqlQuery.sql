@@ -31,3 +31,11 @@ create table category (
 id int primary key auto_increment,
 name varchar(200) unique
 );
+
+create table sales (
+	id int primary key auto_increment,
+    customer varchar(200),
+    productName varchar(200),
+    vandorName varchar(200),
+    quantity int
+);

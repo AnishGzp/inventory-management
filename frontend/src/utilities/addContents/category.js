@@ -2,7 +2,7 @@
 export const addCategory = [
   {
     id: "name",
-    placeholder: "Enter the Vendor name",
+    placeholder: "Enter the Category name",
     type: "text",
     readOnly: false,
   },

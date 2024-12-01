@@ -20,3 +20,5 @@ export {
   editCategory,
   addCategory,
 } from "./categoryController/categoryController.js";
+
+export { getSales, deleteSales } from "./salesController/salesController.js";

@@ -61,6 +61,10 @@ export default function Layout() {
       title: "Category",
       id: "category",
     },
+    {
+      title: "Sales",
+      id: "sales",
+    },
   ];
 
   function handleClick(e) {

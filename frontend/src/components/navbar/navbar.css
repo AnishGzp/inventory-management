@@ -37,13 +37,13 @@
   padding: 0.5rem 0.3rem;
 
   cursor: pointer;
+  border-radius: 0 20px 20px 0;
 
   transition: 0.5s ease-in-out;
 }
 
 .navbar_nav_items.active {
   background-color: #ffcf9d;
-  border-radius: 0 20px 20px 0;
 }
 
 .navbar_user {
