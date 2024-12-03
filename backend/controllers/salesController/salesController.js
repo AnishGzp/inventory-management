@@ -62,7 +62,7 @@ export const addSales = async (req, res) => {
     }
 
     const [rows] = await dbConnection.query(
-      "SELECT quantity FROM product WHERE name=?",
+      "SELECT quantity,price FROM product WHERE name=?",
       [product]
     );
 
@@ -78,14 +78,16 @@ export const addSales = async (req, res) => {
       return res.status(400).json({ code: 2211, msg: "Not enough stocks" });
     }
 
+    const calculatedPrice = parseFloat(rows[0].price) * parseInt(quantity, 10);
+
     const [updateQuantity] = await dbConnection.query(
-      "UPDATE product SET quantity=? WHERE name=?",
+      "UPDATE product SET quantity = ? WHERE name = ?",
       [remainingQuantity, product]
     );
 
     const [result] = await dbConnection.query(
       "INSERT INTO sales (customer,productName,vandorName,quantity,price) VALUES (?,?,?,?,?)",
-      [customer, product, vendor, quantity, price]
+      [customer, product, vendor, quantity, calculatedPrice]
     );
     res.status(200).json({ msg: "Vendor added successfully" });
   } catch (error) {
