@@ -38,3 +38,63 @@ export const deleteSales = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
+
+// Add Sales
+export const addSales = async (req, res) => {
+  const { customer, product, quantity, price, vendor } = req.body;
+
+  const missingFields = [];
+
+  if (!customer) missingFields.push("customer");
+  if (!product) missingFields.push("product");
+  if (!quantity) missingFields.push("quantity");
+  if (!price) missingFields.push("price");
+  if (!vendor) missingFields.push("vendor");
+
+  if (missingFields.length > 0) {
+    return res.status(400).json({ missingFields });
+  }
+
+  try {
+    const dbConnection = await connectToDatabase();
+    if (!dbConnection) {
+      throw new Error("Database connection Error");
+    }
+
+    const [rows] = await dbConnection.query(
+      "SELECT quantity FROM product WHERE name=?",
+      [product]
+    );
+
+    const getQuantity = rows.length ? parseInt(rows[0].quantity) : null;
+
+    if (getQuantity === null) {
+      return res.status(404).json({ msg: "Product not found" });
+    }
+
+    const remainingQuantity = getQuantity - parseInt(quantity);
+
+    if (remainingQuantity < 0) {
+      return res.status(400).json({ code: 2211, msg: "Not enough stocks" });
+    }
+
+    const [updateQuantity] = await dbConnection.query(
+      "UPDATE product SET quantity=? WHERE name=?",
+      [remainingQuantity, product]
+    );
+
+    const [result] = await dbConnection.query(
+      "INSERT INTO sales (customer,productName,vandorName,quantity,price) VALUES (?,?,?,?,?)",
+      [customer, product, vendor, quantity, price]
+    );
+    res.status(200).json({ msg: "Vendor added successfully" });
+  } catch (error) {
+    console.log(error);
+
+    if (error.code === "ER_DUP_ENTRY") {
+      res.status(400).json({ error });
+    } else {
+      res.status(500).json({ msg: "Database query error" });
+    }
+  }
+};

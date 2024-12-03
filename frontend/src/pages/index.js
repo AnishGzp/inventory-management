@@ -19,3 +19,4 @@ export { default as AddCategory } from "./addContents/addCategory/AddCategory";
 
 // Sales exports
 export { default as Sales } from "./sales/Sales";
+export { default as AddSales } from "./addContents/addSales/AddSales";

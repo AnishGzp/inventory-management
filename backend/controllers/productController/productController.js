@@ -116,7 +116,7 @@ export const editProduct = async (req, res) => {
     if (rows.affectedRows === 0) {
       return res.status(404).json({ msg: "Product not found" });
     }
-    res.status(200).json({ msg: "Product deleted successfully" });
+    res.status(200).json({ msg: "Product updated successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: error.message });

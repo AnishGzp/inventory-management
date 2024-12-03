@@ -28,7 +28,7 @@ export default function Products() {
   const filteredData =
     searchQuery.trim() !== ""
       ? salesData.filter((item) => {
-          return item.name
+          return item.customer
             .toLowerCase()
             .includes(searchQuery.toLocaleLowerCase());
         })
@@ -65,9 +65,6 @@ export default function Products() {
           salesTitle={salesTitle}
           salesData={filteredData}
           handleDelete={handleDelete}
-          handleEdit={(item) => {
-            navigate("/sales/editsales", { state: { item } });
-          }}
         />
       </div>
     </div>

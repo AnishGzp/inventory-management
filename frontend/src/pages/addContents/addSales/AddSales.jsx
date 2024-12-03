@@ -1,18 +1,17 @@
 import "../style.css";
+import "./addSales.css";
 
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AddInput } from "../../../components";
-import { addProducts } from "../../../utilities";
+import { addSales } from "../../../utilities";
 import { useNavigate } from "react-router-dom";
 
 export default function AddProducts() {
-  const [productdata, setProductData] = useState({
-    skuNo: "",
-    name: "",
-    category: "",
-    desc: "",
+  const [salesData, setSalesData] = useState({
+    customer: "",
+    product: "",
     quantity: "",
     price: "",
     vendor: "",
@@ -20,7 +19,7 @@ export default function AddProducts() {
 
   const [addProductSelect, setAddProductSelect] = useState([
     {
-      id: "category",
+      id: "product",
       values: [],
     },
     {
@@ -33,15 +32,18 @@ export default function AddProducts() {
 
   const navigate = useNavigate();
 
-  async function getCategory() {
-    const res = await fetch("http://localhost:3000/category");
+  async function getProduct() {
+    const res = await fetch("http://localhost:3000/products");
     const data = await res.json();
 
-    const categoryValue = data.map((item) => ({ value: item.name }));
+    const ProductValue = data.map((item) => ({
+      value: item.name,
+      price: item.price,
+    }));
 
     setAddProductSelect((prevData) =>
       prevData.map((field) =>
-        field.id === "category" ? { ...field, values: categoryValue } : field
+        field.id === "product" ? { ...field, values: ProductValue } : field
       )
     );
   }
@@ -60,14 +62,37 @@ export default function AddProducts() {
   }
 
   useEffect(() => {
-    getCategory();
+    getProduct();
     getVendor();
   }, []);
+
+  useEffect(() => {
+    document.getElementById("price").classList.remove("error");
+    document.getElementById("price").value = salesData.price;
+  }, [salesData]);
 
   function handleChange(e) {
     const { id, value } = e.target;
     document.getElementById(id).classList.remove("error");
-    setProductData((prevData) => ({ ...prevData, [id]: value }));
+
+    setSalesData((prevData) => {
+      const updatedData = { ...prevData, [id]: value };
+
+      if (id === "product" || id === "quantity") {
+        const selectedProduct = addProductSelect
+          .find((field) => field.id === "product")
+          ?.values.find((product) => product.value === updatedData.product);
+
+        if (selectedProduct && updatedData.quantity) {
+          updatedData.price = (
+            parseFloat(selectedProduct.price) *
+            parseInt(updatedData.quantity, 10)
+          ).toFixed(2);
+        }
+      }
+
+      return updatedData;
+    });
   }
 
   async function handleSubmit(e) {
@@ -75,9 +100,9 @@ export default function AddProducts() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/add/products", {
+      const res = await fetch("http://localhost:3000/add/sales", {
         method: "POST",
-        body: JSON.stringify(productdata),
+        body: JSON.stringify(salesData),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -91,13 +116,16 @@ export default function AddProducts() {
       } else if (res.status === 500) {
         setLoading(false);
         toast.error("Internal server error");
-      } else if (res.status === 400 && data.error.code === "ER_DUP_ENTRY") {
+      } else if (res.status === 400 && data.code === 2211) {
         setLoading(false);
-        toast.error("SKU already exist");
+        toast.error("Not enough stocks.");
+      } else if (res.status === 404) {
+        setLoading(false);
+        toast.error("Product not found. Try again later");
       } else if (res.status === 200) {
-        toast.success("Product addded successfully");
+        toast.success("Sales addded successfully");
         setTimeout(() => {
-          navigate("/products");
+          navigate("/sales");
           setLoading(false);
         }, 2000);
       }
@@ -109,10 +137,10 @@ export default function AddProducts() {
   }
   return (
     <div className="addProducts">
-      <div className="addProducts_container">
+      <div className="addProducts_container addSales_container">
         <AddInput
           title="Add Products"
-          addContents={addProducts}
+          addContents={addSales}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           select={true}

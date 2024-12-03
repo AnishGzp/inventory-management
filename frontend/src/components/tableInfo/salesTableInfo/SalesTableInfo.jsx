@@ -3,7 +3,7 @@ import "../tableInfo.css";
 import React from "react";
 
 export default function SalesTableInfo(props) {
-  const { salesTitle, title, salesData, handleDelete, handleEdit } = props;
+  const { salesTitle, title, salesData, handleDelete } = props;
 
   return (
     <div className="tableInfo">
@@ -30,7 +30,6 @@ export default function SalesTableInfo(props) {
                   <td>{item.price}</td>
 
                   <td className="table_button">
-                    <button onClick={() => handleEdit(item)}>Edit</button>
                     <button onClick={() => handleDelete(item.id)}>
                       Delete
                     </button>

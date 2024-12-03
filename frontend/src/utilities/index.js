@@ -9,6 +9,7 @@ export { salesTitle } from "./tableContents/sales.js";
 export { addProducts } from "./addContents/product.js";
 export { addVendors } from "./addContents/vendor.js";
 export { addCategory } from "./addContents/category.js";
+export { addSales } from "./addContents/sales.js";
 
 // ***********Edit Contents******************
 

@@ -87,7 +87,8 @@ export default function Layout() {
   }
 
   const active =
-    location.pathname === "/" ? "dashboard" : location.pathname.substring(1);
+    navItems.find((item) => location.pathname.startsWith(`/${item.id}`))?.id ||
+    "dashboard";
 
   return (
     <>
