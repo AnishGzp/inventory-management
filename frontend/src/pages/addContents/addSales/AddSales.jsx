@@ -139,7 +139,7 @@ export default function AddProducts() {
     <div className="addProducts">
       <div className="addProducts_container addSales_container">
         <AddInput
-          title="Add Products"
+          title="Add Sales"
           addContents={addSales}
           handleChange={handleChange}
           handleSubmit={handleSubmit}

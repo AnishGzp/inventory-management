@@ -2,23 +2,23 @@ import "../tableInfo.css";
 
 import React, { useEffect, useState } from "react";
 
-export default function VendorTableInfo(props) {
-  const { vendorTitle, title, vendorData, handleDelete, handleEdit } = props;
+export default function PalesTableInfo(props) {
+  const { purchaseTitle, title, purchaseData, handleDelete } = props;
 
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 5;
 
-  const totalPages = Math.ceil(vendorData.length / rowsPerPage);
+  const totalPages = Math.ceil(purchaseData.length / rowsPerPage);
 
   useEffect(() => {
     if (currentPage > totalPages) {
       setCurrentPage(totalPages || 1);
     }
-  }, [vendorData, currentPage, totalPages]);
+  }, [purchaseData, currentPage, totalPages]);
 
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
-  const currentData = vendorData.slice(startIndex, endIndex);
+  const currentData = purchaseData.slice(startIndex, endIndex);
 
   const handlePrevPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
@@ -35,7 +35,7 @@ export default function VendorTableInfo(props) {
         <table cellSpacing={0}>
           <thead>
             <tr>
-              {vendorTitle.map((item, index) => (
+              {purchaseTitle.map((item, index) => (
                 <th key={index}>{item}</th>
               ))}
             </tr>
@@ -46,12 +46,15 @@ export default function VendorTableInfo(props) {
               currentData.map((item, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-
-                  <td>{item.name}</td>
+                  <td>{item.product}</td>
+                  <td>{item.vendor}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.selling_price}</td>
+                  <td>{item.price}</td>
+                  <td>{item.status}</td>
 
                   <td className="table_button">
-                    <button onClick={() => handleEdit(item)}>Edit</button>
-                    <button onClick={() => handleDelete(item.name)}>
+                    <button onClick={() => handleDelete(item.id)}>
                       Delete
                     </button>
                   </td>
@@ -59,8 +62,8 @@ export default function VendorTableInfo(props) {
               ))
             ) : (
               <tr>
-                <td colSpan={vendorTitle.length}>
-                  No vendors found. Add Vendors
+                <td colSpan={purchaseTitle.length}>
+                  No purchase record found. Add purchase order
                 </td>
               </tr>
             )}

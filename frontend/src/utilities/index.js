@@ -3,6 +3,7 @@ export { productTitle } from "./tableContents/product.js";
 export { vendorTitle } from "./tableContents/vendor.js";
 export { categoryTitle } from "./tableContents/category.js";
 export { salesTitle } from "./tableContents/sales.js";
+export { purchaseTitle } from "./tableContents/purchase.js";
 
 // ***********Add Contents******************
 

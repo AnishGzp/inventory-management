@@ -1,6 +1,6 @@
 import "../tableInfo.css";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function ProductTableInfo(props) {
   const { productTitle, title, prouctData, handleDelete, handleEdit } = props;

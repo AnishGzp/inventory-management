@@ -37,5 +37,15 @@ create table sales (
     customer varchar(200),
     productName varchar(200),
     vandorName varchar(200),
-    quantity int
+    quantity int,
+    price int
+);
+
+create table purchase (
+product varchar(200),
+vendor varchar(200),
+quantity int,
+selling_price int,
+price int,
+status varchar(200)
 );

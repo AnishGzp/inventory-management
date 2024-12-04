@@ -17,6 +17,7 @@ import {
   AddCategory,
   Sales,
   AddSales,
+  Purchase,
 } from "./pages";
 
 export default function App() {
@@ -42,6 +43,8 @@ export default function App() {
           {/* Sales Routes */}
           <Route path="/sales" element={<Sales />} />
           <Route path="/sales/AddSales" element={<AddSales />} />
+          {/* Purchase Routes */}
+          <Route path="/purchase" element={<Purchase />} />
         </Route>
       </Routes>
     </main>

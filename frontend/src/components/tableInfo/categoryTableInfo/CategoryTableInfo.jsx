@@ -1,6 +1,6 @@
 import "../tableInfo.css";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function VendorTableInfo(props) {
   const { categoryTitle, title, categoryData, handleDelete, handleEdit } =
