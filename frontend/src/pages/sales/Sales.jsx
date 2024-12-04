@@ -16,8 +16,6 @@ export default function Products() {
     const res = await fetch("http://localhost:3000/sales");
     const data = await res.json();
 
-    console.log(data);
-
     setSalesData(data);
   }
 
