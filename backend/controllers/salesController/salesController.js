@@ -41,7 +41,7 @@ export const deleteSales = async (req, res) => {
 
 // Add Sales
 export const addSales = async (req, res) => {
-  const { customer, product, quantity, price, vendor } = req.body;
+  const { productId, customer, product, quantity, price, vendor } = req.body;
 
   const missingFields = [];
 
@@ -62,8 +62,8 @@ export const addSales = async (req, res) => {
     }
 
     const [rows] = await dbConnection.query(
-      "SELECT quantity,price FROM product WHERE name=?",
-      [product]
+      "SELECT quantity,price FROM product WHERE id=?",
+      [productId]
     );
 
     const getQuantity = rows.length ? parseInt(rows[0].quantity) : null;
@@ -81,8 +81,8 @@ export const addSales = async (req, res) => {
     const calculatedPrice = parseFloat(rows[0].price) * parseInt(quantity, 10);
 
     const [updateQuantity] = await dbConnection.query(
-      "UPDATE product SET quantity = ? WHERE name = ?",
-      [remainingQuantity, product]
+      "UPDATE product SET quantity = ? WHERE id = ?",
+      [remainingQuantity, productId]
     );
 
     const [result] = await dbConnection.query(

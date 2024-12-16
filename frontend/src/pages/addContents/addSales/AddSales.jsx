@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AddProducts() {
   const [salesData, setSalesData] = useState({
+    productId: "",
     customer: "",
     product: "",
     quantity: "",
@@ -36,9 +37,12 @@ export default function AddProducts() {
     const res = await fetch("http://localhost:3000/products");
     const data = await res.json();
 
+    console.log(data);
+
     const ProductValue = data.map((item) => ({
       value: item.name,
       price: item.price,
+      id: item.id,
     }));
 
     setAddProductSelect((prevData) =>
@@ -78,15 +82,28 @@ export default function AddProducts() {
     setSalesData((prevData) => {
       const updatedData = { ...prevData, [id]: value };
 
-      if (id === "product" || id === "quantity") {
+      if (id === "product") {
         const selectedProduct = addProductSelect
           .find((field) => field.id === "product")
-          ?.values.find((product) => product.value === updatedData.product);
+          ?.values.find((product) => product.value === value);
 
-        if (selectedProduct && updatedData.quantity) {
+        if (selectedProduct) {
+          updatedData.productId = selectedProduct.id;
+          if (updatedData.quantity) {
+            updatedData.price = (
+              parseFloat(selectedProduct.price) *
+              parseInt(updatedData.quantity, 10)
+            ).toFixed(2);
+          }
+        }
+      } else if (id === "quantity") {
+        const selectedProduct = addProductSelect
+          .find((field) => field.id === "product")
+          ?.values.find((product) => product.value === prevData.product);
+
+        if (selectedProduct) {
           updatedData.price = (
-            parseFloat(selectedProduct.price) *
-            parseInt(updatedData.quantity, 10)
+            parseFloat(selectedProduct.price) * parseInt(value, 10)
           ).toFixed(2);
         }
       }

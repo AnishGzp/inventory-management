@@ -13,7 +13,7 @@ export default function Purchase() {
   const navigate = useNavigate();
 
   async function getpurchase() {
-    const res = await fetch("http://localhost:3000/sales");
+    const res = await fetch("http://localhost:3000/purchase");
     const data = await res.json();
 
     setPurchaseData(data);

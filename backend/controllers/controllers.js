@@ -26,3 +26,5 @@ export {
   deleteSales,
   addSales,
 } from "./salesController/salesController.js";
+
+export { getPurchase } from "./purchaseController/purchaseController.js";

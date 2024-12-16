@@ -17,6 +17,7 @@ export default function Sales() {
     const data = await res.json();
 
     setSalesData(data);
+    console.log(salesData);
   }
 
   useEffect(() => {

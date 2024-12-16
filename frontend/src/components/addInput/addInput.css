@@ -16,4 +16,11 @@
 
 .addInput form button {
   width: 50%;
+  align-self: center;
+}
+
+.addInput_form {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
 }
