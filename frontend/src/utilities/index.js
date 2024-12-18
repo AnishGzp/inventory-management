@@ -11,6 +11,7 @@ export { addProducts } from "./addContents/product.js";
 export { addVendors } from "./addContents/vendor.js";
 export { addCategory } from "./addContents/category.js";
 export { addSales } from "./addContents/sales.js";
+export { addPurchase } from "./addContents/purchase.js";
 
 // ***********Edit Contents******************
 

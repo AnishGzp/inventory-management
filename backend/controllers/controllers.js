@@ -27,4 +27,8 @@ export {
   addSales,
 } from "./salesController/salesController.js";
 
-export { getPurchase } from "./purchaseController/purchaseController.js";
+export {
+  getPurchase,
+  deletePurchase,
+  addPurchase,
+} from "./purchaseController/purchaseController.js";

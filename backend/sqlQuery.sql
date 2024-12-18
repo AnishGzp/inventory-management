@@ -42,6 +42,7 @@ create table sales (
 );
 
 create table purchase (
+    id int auto_increment primary key,
 product varchar(200),
 vendor varchar(200),
 quantity int,

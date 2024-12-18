@@ -18,6 +18,7 @@ import {
   Sales,
   AddSales,
   Purchase,
+  AddPurchase,
 } from "./pages";
 
 export default function App() {
@@ -45,6 +46,7 @@ export default function App() {
           <Route path="/sales/AddSales" element={<AddSales />} />
           {/* Purchase Routes */}
           <Route path="/purchase" element={<Purchase />} />
+          <Route path="/purchase/addPurchase" element={<AddPurchase />} />
         </Route>
       </Routes>
     </main>

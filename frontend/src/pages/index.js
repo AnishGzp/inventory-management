@@ -23,3 +23,4 @@ export { default as AddSales } from "./addContents/addSales/AddSales";
 
 // Purchase exports
 export { default as Purchase } from "./purchase/Purchase";
+export { default as AddPurchase } from "./addContents/addPurchase/AddPurchase";

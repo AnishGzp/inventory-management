@@ -1,21 +1,22 @@
 import "../style.css";
-import "./addSales.css";
+import "./addPurchase.css";
 
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AddInput } from "../../../components";
-import { addSales } from "../../../utilities";
+import { addPurchase } from "../../../utilities";
 import { useNavigate } from "react-router-dom";
 
-export default function AddSales() {
+export default function AddPurchase() {
   const [salesData, setSalesData] = useState({
     productId: "",
-    customer: "",
+    sellingPrice: "",
     product: "",
     quantity: "",
     price: "",
     vendor: "",
+    status: "",
   });
 
   const [addProductSelect, setAddProductSelect] = useState([
@@ -26,6 +27,17 @@ export default function AddSales() {
     {
       id: "vendor",
       values: [],
+    },
+    {
+      id: "status",
+      values: [
+        {
+          value: "Paid",
+        },
+        {
+          value: "Unpaid",
+        },
+      ],
     },
   ]);
 
@@ -41,6 +53,7 @@ export default function AddSales() {
       value: item.name,
       price: item.price,
       id: item.id,
+      selling_price: item.price,
     }));
 
     setAddProductSelect((prevData) =>
@@ -73,6 +86,8 @@ export default function AddSales() {
     document.getElementById("price").value = salesData.price;
   }, [salesData]);
 
+  console.log(salesData);
+
   function handleChange(e) {
     const { id, value } = e.target;
     document.getElementById(id).classList.remove("error");
@@ -87,6 +102,7 @@ export default function AddSales() {
 
         if (selectedProduct) {
           updatedData.productId = selectedProduct.id;
+          updatedData.sellingPrice = selectedProduct.selling_price;
           if (updatedData.quantity) {
             updatedData.price = (
               parseFloat(selectedProduct.price) *
@@ -115,7 +131,7 @@ export default function AddSales() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/add/sales", {
+      const res = await fetch("http://localhost:3000/add/purchase", {
         method: "POST",
         body: JSON.stringify(salesData),
         headers: { "Content-Type": "application/json" },
@@ -140,7 +156,7 @@ export default function AddSales() {
       } else if (res.status === 200) {
         toast.success("Sales addded successfully");
         setTimeout(() => {
-          navigate("/sales");
+          navigate("/purchase");
           setLoading(false);
         }, 2000);
       }
@@ -152,10 +168,10 @@ export default function AddSales() {
   }
   return (
     <div className="addProducts">
-      <div className="addProducts_container addSales_container">
+      <div className="addProducts_container addPurchase_container">
         <AddInput
           title="Add Sales"
-          addContents={addSales}
+          addContents={addPurchase}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
           select={true}
