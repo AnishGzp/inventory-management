@@ -86,8 +86,6 @@ export default function AddPurchase() {
     document.getElementById("price").value = salesData.price;
   }, [salesData]);
 
-  console.log(salesData);
-
   function handleChange(e) {
     const { id, value } = e.target;
     document.getElementById(id).classList.remove("error");
