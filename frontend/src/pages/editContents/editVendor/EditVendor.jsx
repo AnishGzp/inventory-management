@@ -44,7 +44,7 @@ export default function EditVendor() {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/edit/vendor/${vendorData.name}`,
+        `https://inventory-management-1m3p.onrender.com/edit/vendor/${vendorData.name}`,
         {
           method: "POST",
           body: JSON.stringify(vendorData),

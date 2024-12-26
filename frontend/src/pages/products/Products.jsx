@@ -13,7 +13,9 @@ export default function Products() {
   const navigate = useNavigate();
 
   async function getProduct() {
-    const res = await fetch("http://localhost:3000/products");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/products"
+    );
     const data = await res.json();
 
     setProductData(data);
@@ -35,7 +37,9 @@ export default function Products() {
   function handleDelete(skuNo) {
     const delteAlert = window.confirm("Delete the product");
     if (delteAlert) {
-      fetch(`http://localhost:3000/delete/product/${skuNo}`).then((res) => {
+      fetch(
+        `https://inventory-management-1m3p.onrender.com/delete/product/${skuNo}`
+      ).then((res) => {
         if (res.status === 500) {
           toast.error("Internal server error");
         } else if (res.status === 404) {

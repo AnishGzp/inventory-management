@@ -46,7 +46,9 @@ export default function AddPurchase() {
   const navigate = useNavigate();
 
   async function getProduct() {
-    const res = await fetch("http://localhost:3000/products");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/products"
+    );
     const data = await res.json();
 
     const ProductValue = data.map((item) => ({
@@ -64,7 +66,9 @@ export default function AddPurchase() {
   }
 
   async function getVendor() {
-    const res = await fetch("http://localhost:3000/vendors");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/vendors"
+    );
     const data = await res.json();
 
     const vendorValue = data.map((item) => ({ value: item.name }));
@@ -129,11 +133,14 @@ export default function AddPurchase() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/add/purchase", {
-        method: "POST",
-        body: JSON.stringify(salesData),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        "https://inventory-management-1m3p.onrender.com/add/purchase",
+        {
+          method: "POST",
+          body: JSON.stringify(salesData),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = await res.json();
       if (res.status === 400 && data.missingFields) {

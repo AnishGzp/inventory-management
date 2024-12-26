@@ -13,7 +13,9 @@ export default function Category() {
   const navigate = useNavigate();
 
   async function getCategory() {
-    const res = await fetch("http://localhost:3000/category");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/category"
+    );
     const data = await res.json();
 
     setCategoryData(data);
@@ -35,7 +37,9 @@ export default function Category() {
   function handleDelete(name) {
     const delteAlert = window.confirm("Delete the product");
     if (delteAlert) {
-      fetch(`http://localhost:3000/delete/category/${name}`).then((res) => {
+      fetch(
+        `https://inventory-management-1m3p.onrender.com/delete/category/${name}`
+      ).then((res) => {
         if (res.status === 500) {
           toast.error("Internal server error");
         } else if (res.status === 404) {

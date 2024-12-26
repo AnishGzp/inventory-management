@@ -28,7 +28,9 @@ export default function Home() {
   const [purchaseData, setPurchaseData] = useState([]);
 
   async function getProduct() {
-    const res = await fetch("http://localhost:3000/products");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/products"
+    );
 
     const data = await res.json();
 
@@ -36,7 +38,9 @@ export default function Home() {
   }
 
   async function gatSales() {
-    const res = await fetch("http://localhost:3000/sales");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/sales"
+    );
 
     const data = await res.json();
 

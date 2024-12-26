@@ -56,7 +56,7 @@ export default function EditProducts() {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/edit/products/${productdata.skuNo}`,
+        `https://inventory-management-1m3p.onrender.com/edit/products/${productdata.skuNo}`,
         {
           method: "POST",
           body: JSON.stringify(productdata),

@@ -13,7 +13,9 @@ export default function Purchase() {
   const navigate = useNavigate();
 
   async function getpurchase() {
-    const res = await fetch("http://localhost:3000/purchase");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/purchase"
+    );
     const data = await res.json();
 
     setPurchaseData(data);
@@ -35,7 +37,9 @@ export default function Purchase() {
   function handleDelete(id) {
     const delteAlert = window.confirm("Delete the product");
     if (delteAlert) {
-      fetch(`http://localhost:3000/delete/purchase/${id}`).then((res) => {
+      fetch(
+        `https://inventory-management-1m3p.onrender.com/delete/purchase/${id}`
+      ).then((res) => {
         if (res.status === 500) {
           toast.error("Internal server error");
         } else if (res.status === 404) {

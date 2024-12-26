@@ -26,11 +26,14 @@ export default function AddVendors() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/add/vendors", {
-        method: "POST",
-        body: JSON.stringify(vendorData),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        "https://inventory-management-1m3p.onrender.com/add/vendors",
+        {
+          method: "POST",
+          body: JSON.stringify(vendorData),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = await res.json();
       if (res.status === 400 && data.missingFields) {

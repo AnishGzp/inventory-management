@@ -22,7 +22,7 @@ export default function Layout() {
       setHasToken(false);
     }
 
-    fetch("http://localhost:3000/auth/getEmail", {
+    fetch("https://inventory-management-1m3p.onrender.com/auth/getEmail", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

@@ -42,7 +42,7 @@ export default function EditCategory() {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://localhost:3000/edit/category/${categoryData.name}`,
+        `https://inventory-management-1m3p.onrender.com/edit/category/${categoryData.name}`,
         {
           method: "POST",
           body: JSON.stringify(categoryData),

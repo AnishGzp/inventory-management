@@ -34,7 +34,9 @@ export default function AddProducts() {
   const navigate = useNavigate();
 
   async function getCategory() {
-    const res = await fetch("http://localhost:3000/category");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/category"
+    );
     const data = await res.json();
 
     const categoryValue = data.map((item) => ({ value: item.name }));
@@ -47,7 +49,9 @@ export default function AddProducts() {
   }
 
   async function getVendor() {
-    const res = await fetch("http://localhost:3000/vendors");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/vendors"
+    );
     const data = await res.json();
 
     const vendorValue = data.map((item) => ({ value: item.name }));
@@ -75,11 +79,14 @@ export default function AddProducts() {
 
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/add/products", {
-        method: "POST",
-        body: JSON.stringify(productdata),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        "https://inventory-management-1m3p.onrender.com/add/products",
+        {
+          method: "POST",
+          body: JSON.stringify(productdata),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = await res.json();
       if (res.status === 400 && data.missingFields) {
