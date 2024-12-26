@@ -55,11 +55,14 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/auth/getUser", {
-        method: "POST",
-        body: JSON.stringify(userdata),
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        "https://inventory-management-1m3p.onrender.com/auth/getUser",
+        {
+          method: "POST",
+          body: JSON.stringify(userdata),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       const data = await res.json();
 

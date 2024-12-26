@@ -46,11 +46,14 @@ export default function Register() {
     setLoading(true);
     e.preventDefault();
 
-    const res = await fetch("http://localhost:3000/auth/newUser", {
-      method: "POST",
-      body: JSON.stringify(userData),
-      headers: { "Content-Type": "application/json" },
-    });
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/auth/newUser",
+      {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
     const data = await res.json();
 
