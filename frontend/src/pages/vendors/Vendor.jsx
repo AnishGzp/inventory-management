@@ -13,7 +13,9 @@ export default function Vendor() {
   const navigate = useNavigate();
 
   async function getVendor() {
-    const res = await fetch("http://localhost:3000/vendors");
+    const res = await fetch(
+      "https://inventory-management-1m3p.onrender.com/vendors"
+    );
     const data = await res.json();
 
     setVendorData(data);
@@ -35,7 +37,9 @@ export default function Vendor() {
   function handleDelete(name) {
     const delteAlert = window.confirm("Delete the product");
     if (delteAlert) {
-      fetch(`http://localhost:3000/delete/vendor/${name}`).then((res) => {
+      fetch(
+        `https://inventory-management-1m3p.onrender.coms/delete/vendor/${name}`
+      ).then((res) => {
         if (res.status === 500) {
           toast.error("Internal server error");
         } else if (res.status === 404) {
