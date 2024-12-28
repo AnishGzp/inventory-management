@@ -15,7 +15,6 @@ async function connectToDatabase() {
       user: user,
       password: pass,
       database: database,
-      port: 3306,
     });
 
     return db;
