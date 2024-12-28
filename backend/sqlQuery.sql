@@ -14,7 +14,7 @@ create table auth (
 create table product (
 	id int primary key auto_increment,
 	skuNo varchar(200) unique,
-    name varchar(200),
+    name varchar(200) unique,
     category varchar(200),
     description varchar(200),
     quantity varchar(200),
