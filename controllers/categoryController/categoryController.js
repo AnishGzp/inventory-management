@@ -1,13 +1,10 @@
-import connectToDatabase from "../../db.js";
+import Category from "../../models/category.js";
 
 // Get All Category
 export const getCategory = async (req, res) => {
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.query("SELECT * FROM category");
-    res.status(200).json(rows);
+    const categories = await Category.find();
+    res.status(200).json(categories);
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Internal error" });
@@ -19,15 +16,9 @@ export const deleteCategory = async (req, res) => {
   const { name } = req.params;
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
+    const deletedCategory = await Category.findOneAndDelete({ name });
 
-    const [rows] = await dbConnection.execute(
-      "DELETE FROM category WHERE name = ? ",
-      [name]
-    );
-
-    if (rows.affectedRows === 0) {
+    if (!deletedCategory) {
       return res.status(404).json({ msg: "Category not found" });
     }
     res.status(200).json({ msg: "Category deleted successfully" });
@@ -37,11 +28,9 @@ export const deleteCategory = async (req, res) => {
   }
 };
 
-// Edit Categoryy
+// Edit Category
 export const editCategory = async (req, res) => {
-  const { name, id } = req.body;
-
-  console.log(name);
+  const { name, _id } = req.body;
 
   const missingFields = [];
 
@@ -52,22 +41,24 @@ export const editCategory = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.execute(
-      "UPDATE category SET name=? WHERE id=?",
-      [name, id]
+    const updatedCategory = await Category.findByIdAndUpdate(
+      _id,
+      { name },
+      { new: true, runValidators: true }
     );
 
-    if (rows.affectedRows === 0) {
+    if (!updatedCategory) {
       return res.status(404).json({ msg: "Category not found" });
     }
     res.status(200).json({ msg: "Category updated successfully" });
   } catch (error) {
     console.log(error);
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
+    if (error.code === 11000) {
+      // Duplicate key error for MongoDB
+      res.status(400).json({
+        error: "Category name already exists",
+        error: { code: "ER_DUP_ENTRY" },
+      });
     } else {
       res.status(500).json({ msg: "Database query error" });
     }
@@ -87,21 +78,14 @@ export const addCategory = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) {
-      throw new Error("Database connection Error");
-    }
-
-    const [rows] = await dbConnection.query(
-      "INSERT INTO category (name) VALUES (?)",
-      [name]
-    );
-    res.status(200).json({ msg: "category added successfully" });
+    const newCategory = new Category({ name });
+    await newCategory.save();
+    res.status(200).json({ msg: "Category added successfully" });
   } catch (error) {
     console.log(error);
-
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
+    if (error.code === 11000) {
+      // Duplicate key error for MongoDB
+      res.status(400).json({ error: "Category name already exists" });
     } else {
       res.status(500).json({ msg: "Database query error" });
     }

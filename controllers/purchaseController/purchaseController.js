@@ -1,15 +1,13 @@
-import connectToDatabase from "../../db.js";
+import Purchase from "../../models/purchase.js";
+import Product from "../../models/product.js"; // Assuming Product model exists
 
 // Get All Sales
 export const getPurchase = async (req, res) => {
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.query("SELECT * FROM purchase");
-    res.status(200).json(rows);
+    const purchases = await Purchase.find();
+    res.status(200).json(purchases);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ msg: "Internal error" });
   }
 };
@@ -18,23 +16,14 @@ export const getPurchase = async (req, res) => {
 export const deletePurchase = async (req, res) => {
   const { id } = req.params;
 
-  console.log(id);
-
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.execute(
-      "DELETE FROM purchase WHERE id = ? ",
-      [id]
-    );
-
-    if (rows.affectedRows === 0) {
+    const result = await Purchase.findByIdAndDelete(id);
+    if (!result) {
       return res.status(404).json({ msg: "Purchase not found" });
     }
     res.status(200).json({ msg: "Purchase deleted successfully" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ msg: error.message });
   }
 };
@@ -45,7 +34,6 @@ export const addPurchase = async (req, res) => {
     req.body;
 
   const missingFields = [];
-
   if (!status) missingFields.push("status");
   if (!product) missingFields.push("product");
   if (!quantity) missingFields.push("quantity");
@@ -57,45 +45,34 @@ export const addPurchase = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) {
-      throw new Error("Database connection Error");
-    }
-
-    const [rows] = await dbConnection.query(
-      "SELECT quantity,price FROM product WHERE id=?",
-      [productId]
-    );
-
-    const getQuantity = rows.length ? parseInt(rows[0].quantity) : null;
-
-    if (getQuantity === null) {
+    const productData = await Product.findById(productId);
+    if (!productData) {
       return res.status(404).json({ msg: "Product not found" });
     }
 
-    const remainingQuantity = getQuantity + parseInt(quantity);
+    const remainingQuantity =
+      parseInt(productData.quantity, 10) + parseInt(quantity, 10);
+    const calculatedPrice =
+      parseFloat(productData.price) * parseInt(quantity, 10);
 
-    const calculatedPrice = parseFloat(rows[0].price) * parseInt(quantity, 10);
+    // Update product quantity
+    productData.quantity = remainingQuantity;
+    await productData.save();
 
-    const [updateQuantity] = await dbConnection.query(
-      "UPDATE product SET quantity = ? WHERE id = ?",
-      [remainingQuantity, productId]
-    );
+    // Create a new purchase
+    const purchase = new Purchase({
+      product,
+      vendor,
+      quantity,
+      selling_price: sellingPrice,
+      price: calculatedPrice,
+      status,
+    });
 
-    const price = quantity * sellingPrice;
-
-    const [result] = await dbConnection.query(
-      "INSERT INTO purchase (product,vendor,quantity,selling_price,price,status) VALUES (?,?,?,?,?,?)",
-      [product, vendor, quantity, sellingPrice, price, status]
-    );
-    res.status(200).json({ msg: "Vendor added successfully" });
+    await purchase.save();
+    res.status(200).json({ msg: "Purchase added successfully" });
   } catch (error) {
-    console.log(error);
-
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
-    } else {
-      res.status(500).json({ msg: "Database query error" });
-    }
+    console.error(error);
+    res.status(500).json({ msg: "Database query error" });
   }
 };

@@ -1,40 +1,32 @@
-import connectToDatabase from "../../db.js";
+import Sales from "../../models/sales.js"; // Assuming you have a Sales model
+import Products from "../../models/product.js"; // Assuming you have a Products model
 
 // Get All Sales
 export const getSales = async (req, res) => {
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
+    const sales = await Sales.find({});
 
-    const [rows] = await dbConnection.query("SELECT * FROM sales");
-    res.status(200).json(rows);
+    res.status(200).json(sales);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ msg: "Internal error" });
   }
 };
 
-// Delete Vendors
+// Delete Sales
 export const deleteSales = async (req, res) => {
   const { id } = req.params;
 
-  console.log(id);
-
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
+    const result = await Sales.deleteOne({ _id: id }); // Delete by ID
 
-    const [rows] = await dbConnection.execute(
-      "DELETE FROM sales WHERE id = ? ",
-      [id]
-    );
-
-    if (rows.affectedRows === 0) {
+    if (result.deletedCount === 0) {
       return res.status(404).json({ msg: "Sales not found" });
     }
+
     res.status(200).json({ msg: "Sales deleted successfully" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ msg: error.message });
   }
 };
@@ -56,47 +48,43 @@ export const addSales = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) {
-      throw new Error("Database connection Error");
-    }
+    // Find the product by ID
+    const productRecord = await Products.findOne({ _id: productId });
 
-    const [rows] = await dbConnection.query(
-      "SELECT quantity,price FROM product WHERE id=?",
-      [productId]
-    );
-
-    const getQuantity = rows.length ? parseInt(rows[0].quantity) : null;
-
-    if (getQuantity === null) {
+    if (!productRecord) {
       return res.status(404).json({ msg: "Product not found" });
     }
 
-    const remainingQuantity = getQuantity - parseInt(quantity);
+    const availableQuantity = productRecord.quantity;
+    const remainingQuantity = availableQuantity - parseInt(quantity, 10);
 
     if (remainingQuantity < 0) {
       return res.status(400).json({ code: 2211, msg: "Not enough stocks" });
     }
 
-    const calculatedPrice = parseFloat(rows[0].price) * parseInt(quantity, 10);
+    const calculatedPrice =
+      parseFloat(productRecord.price) * parseInt(quantity, 10);
 
-    const [updateQuantity] = await dbConnection.query(
-      "UPDATE product SET quantity = ? WHERE id = ?",
-      [remainingQuantity, productId]
+    // Update product quantity
+    await Products.updateOne(
+      { _id: productId },
+      { $set: { quantity: remainingQuantity } }
     );
 
-    const [result] = await dbConnection.query(
-      "INSERT INTO sales (customer,productName,vandorName,quantity,price) VALUES (?,?,?,?,?)",
-      [customer, product, vendor, quantity, calculatedPrice]
-    );
-    res.status(200).json({ msg: "Vendor added successfully" });
+    // Insert a new sales record
+    const newSale = new Sales({
+      customer,
+      productName: product,
+      vandorName: vendor,
+      quantity,
+      price: calculatedPrice,
+    });
+
+    await newSale.save();
+
+    res.status(200).json({ msg: "Sale added successfully" });
   } catch (error) {
-    console.log(error);
-
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
-    } else {
-      res.status(500).json({ msg: "Database query error" });
-    }
+    console.error(error);
+    res.status(500).json({ msg: "Database query error" });
   }
 };

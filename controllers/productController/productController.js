@@ -1,4 +1,4 @@
-import connectToDatabase from "../../db.js";
+import Product from "../../models/product.js";
 
 // Add Product
 export const addProduct = async (req, res) => {
@@ -19,21 +19,25 @@ export const addProduct = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) {
-      throw new Error("Database connection Error");
-    }
-
-    const [rows] = await dbConnection.query(
-      "INSERT INTO product (skuNo, name, category, description, quantity, price, vendor) VALUES (?,?,?,?,?,?,?)",
-      [skuNo, name, category, desc, quantity, price, vendor]
-    );
+    const newProduct = new Product({
+      skuNo,
+      name,
+      category,
+      description: desc,
+      quantity,
+      price,
+      vendor,
+    });
+    await newProduct.save();
     res.status(200).json({ msg: "Product added successfully" });
   } catch (error) {
     console.log(error);
-
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
+    if (error.code === 11000) {
+      // Duplicate key error for MongoDB
+      res.status(400).json({
+        error: "SKU number already exists",
+        error: { code: "ER_DUP_ENTRY" },
+      });
     } else {
       res.status(500).json({ msg: "Database query error" });
     }
@@ -43,18 +47,15 @@ export const addProduct = async (req, res) => {
 // Get All Product
 export const getProduct = async (req, res) => {
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.query("SELECT * FROM product");
-    res.status(200).json(rows);
+    const products = await Product.find();
+    res.status(200).json(products);
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Internal error" });
   }
 };
 
-// Edit products
+// Edit Product
 export const editProduct = async (req, res) => {
   const { skuNo, name, category, description, quantity, price, vendor } =
     req.body;
@@ -74,46 +75,13 @@ export const editProduct = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
+    const updatedProduct = await Product.findOneAndUpdate(
+      { skuNo },
+      { name, category, description, quantity, price, vendor },
+      { new: true, runValidators: true }
+    );
 
-    const updateFields = [];
-    const updateValues = [];
-
-    if (name) {
-      updateFields.push("name = ?");
-      updateValues.push(name);
-    }
-    if (category) {
-      updateFields.push("category = ?");
-      updateValues.push(category);
-    }
-    if (description) {
-      updateFields.push("description = ?");
-      updateValues.push(description);
-    }
-    if (quantity) {
-      updateFields.push("quantity = ?");
-      updateValues.push(quantity);
-    }
-    if (price) {
-      updateFields.push("price = ?");
-      updateValues.push(price);
-    }
-    if (vendor) {
-      updateFields.push("vendor = ?");
-      updateValues.push(vendor);
-    }
-
-    const query = `UPDATE product SET ${updateFields.join(
-      ", "
-    )} WHERE skuNo = ?`;
-
-    updateValues.push(skuNo);
-
-    const [rows] = await dbConnection.execute(query, updateValues);
-
-    if (rows.affectedRows === 0) {
+    if (!updatedProduct) {
       return res.status(404).json({ msg: "Product not found" });
     }
     res.status(200).json({ msg: "Product updated successfully" });
@@ -123,20 +91,14 @@ export const editProduct = async (req, res) => {
   }
 };
 
-// Delete products
+// Delete Product
 export const deleteProduct = async (req, res) => {
   const { skuNo } = req.params;
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
+    const deletedProduct = await Product.findOneAndDelete({ skuNo });
 
-    const [rows] = await dbConnection.execute(
-      "DELETE FROM product WHERE skuNO = ? ",
-      [skuNo]
-    );
-
-    if (rows.affectedRows === 0) {
+    if (!deletedProduct) {
       return res.status(404).json({ msg: "Product not found" });
     }
     res.status(200).json({ msg: "Product deleted successfully" });

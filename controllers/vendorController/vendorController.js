@@ -1,13 +1,10 @@
-import connectToDatabase from "../../db.js";
+import Vendor from "../../models/Vendor.js";
 
 // Get All Vendors
 export const getVendor = async (req, res) => {
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.query("SELECT * FROM vendor");
-    res.status(200).json(rows);
+    const vendors = await Vendor.find(); // Fetch all vendors
+    res.status(200).json(vendors);
   } catch (error) {
     console.log(error);
     res.status(500).json({ msg: "Internal error" });
@@ -19,15 +16,9 @@ export const deleteVendor = async (req, res) => {
   const { name } = req.params;
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
+    const result = await Vendor.deleteOne({ name }); // Delete vendor by name
 
-    const [rows] = await dbConnection.execute(
-      "DELETE FROM vendor WHERE name = ? ",
-      [name]
-    );
-
-    if (rows.affectedRows === 0) {
+    if (result.deletedCount === 0) {
       return res.status(404).json({ msg: "Vendor not found" });
     }
     res.status(200).json({ msg: "Vendor deleted successfully" });
@@ -42,7 +33,6 @@ export const addVendor = async (req, res) => {
   const { name } = req.body;
 
   const missingFields = [];
-
   if (!name) missingFields.push("name");
 
   if (missingFields.length > 0) {
@@ -50,21 +40,14 @@ export const addVendor = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) {
-      throw new Error("Database connection Error");
-    }
-
-    const [rows] = await dbConnection.query(
-      "INSERT INTO vendor (name) VALUES (?)",
-      [name]
-    );
+    const vendor = new Vendor({ name }); // Create a new vendor
+    await vendor.save(); // Save to MongoDB
     res.status(200).json({ msg: "Vendor added successfully" });
   } catch (error) {
     console.log(error);
-
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
+    if (error.code === 11000) {
+      // MongoDB duplicate key error
+      res.status(400).json({ error: "Vendor already exists" });
     } else {
       res.status(500).json({ msg: "Database query error" });
     }
@@ -73,10 +56,9 @@ export const addVendor = async (req, res) => {
 
 // Edit Vendors
 export const editVendor = async (req, res) => {
-  const { name, id } = req.body;
+  const { name, _id } = req.body;
 
   const missingFields = [];
-
   if (!name) missingFields.push("name");
 
   if (missingFields.length > 0) {
@@ -84,22 +66,21 @@ export const editVendor = async (req, res) => {
   }
 
   try {
-    const dbConnection = await connectToDatabase();
-    if (!dbConnection) throw new Error("Database connection failed");
-
-    const [rows] = await dbConnection.execute(
-      "UPDATE vendor SET name=? WHERE id=?",
-      [name, id]
+    const vendor = await Vendor.findByIdAndUpdate(
+      _id,
+      { name }, // Update the vendor's name
+      { new: true, runValidators: true } // Return the updated vendor and validate
     );
 
-    if (rows.affectedRows === 0) {
+    if (!vendor) {
       return res.status(404).json({ msg: "Vendor not found" });
     }
     res.status(200).json({ msg: "Vendor updated successfully" });
   } catch (error) {
     console.log(error);
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
+    if (error.code === 11000) {
+      // MongoDB duplicate key error
+      res.status(400).json({ error: "Vendor already exists" });
     } else {
       res.status(500).json({ msg: "Database query error" });
     }
