@@ -1,4 +1,4 @@
-import Vendor from "../../models/Vendor.js";
+import Vendor from "../../models/vendor.js";
 
 // Get All Vendors
 export const getVendor = async (req, res) => {
