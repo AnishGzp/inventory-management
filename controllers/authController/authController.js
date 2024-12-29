@@ -1,7 +1,8 @@
-import connectToDatabase from "../../db.js";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import Auth from "../../models/auth.js"; // Importing the Auth model
 
 dotenv.config();
 
@@ -30,21 +31,23 @@ export const newUser = async (req, res) => {
   const hashPass = bcrypt.hashSync(pass, salt);
 
   try {
-    const dbConnection = await connectToDatabase();
+    const newUser = new Auth({
+      fName,
+      lName,
+      email,
+      phone: phoneNo,
+      password: hashPass,
+    });
 
-    if (!dbConnection) {
-      throw new Error("No database connection");
-    }
-    const [rows] = await dbConnection.query(
-      "INSERT INTO auth (fName,lName,email,phone,password) VALUES (?, ?, ?, ?, ?)",
-      [fName, lName, email, phoneNo, hashPass]
-    );
-    res.status(200).json({ msg: "User created successully" });
+    await newUser.save();
+
+    res.status(200).json({ msg: "User created successfully" });
   } catch (error) {
     console.log(error);
 
-    if (error.code === "ER_DUP_ENTRY") {
-      res.status(400).json({ error });
+    if (error.code === 11000) {
+      // Duplicate key error for MongoDB
+      res.status(400).json({ error: "Email already exists" });
     } else {
       res.status(500).json({ msg: "Database query error" });
     }
@@ -61,26 +64,17 @@ export const getUser = async (req, res) => {
   if (!pass) missingFields.push("pass");
 
   if (missingFields.length > 0) {
-    return res.status(400).json({ error: "Missong Fields", missingFields });
+    return res.status(400).json({ error: "Missing Fields", missingFields });
   }
 
   try {
-    const dbConnection = await connectToDatabase();
+    const user = await Auth.findOne({ email });
 
-    if (!dbConnection) throw new Error("Database connection Error");
-
-    const [rows] = await dbConnection.query(
-      `SELECT * FROM auth WHERE email=?`,
-      [email]
-    );
-
-    if (rows.length <= 0) {
+    if (!user) {
       return res.status(400).json({ code: 11223, msg: "User does not exist" });
     }
 
-    const dbPass = rows[0].password;
-
-    const isPasswordMatch = bcrypt.compareSync(pass, dbPass);
+    const isPasswordMatch = bcrypt.compareSync(pass, user.password);
 
     if (!isPasswordMatch) {
       return res
@@ -89,28 +83,29 @@ export const getUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { email: rows[0].email, userName: rows[0].fName },
+      { email: user.email, userName: user.fName },
       secret,
       {
         expiresIn: "6h",
       }
     );
 
-    res.status(200).json({ msg: "User authenticated successfull", token });
+    res.status(200).json({ msg: "User authenticated successfully", token });
   } catch (error) {
     res.status(500).json({ msg: "Internal error" });
+    console.log(error);
   }
 };
 
 // Get email of user from token
 export const getEmail = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ error: "unauthorized" });
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
   try {
     const decoded = jwt.verify(token, secret);
     const username = decoded.userName;
     res.json({ user: username });
   } catch (error) {
-    res.status(401).json({ error: "invalid token" });
+    res.status(401).json({ error: "Invalid token" });
   }
 };

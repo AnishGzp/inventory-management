@@ -1,28 +1,21 @@
-import mysql from "mysql2";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const host = process.env.DB_HOST;
-const user = process.env.DB_USER;
-const pass = process.env.DB_PASS;
-const database = process.env.DB_DATABASE;
+const uri = process.env.MONGO_URI;
 
 async function connectToDatabase() {
   try {
-    const db = await mysql.createConnection({
-      host: host,
-      user: user,
-      password: pass,
-      database: database,
-    });
-
-    return db;
+    await mongoose.connect(uri);
+    console.log("Connection to MongoDB Atlas successfully");
   } catch (err) {
-    console.log("Database Connection Error", err.stack);
-
-    throw new Error("Failed to connect to the database");
+    console.log("Database Connection Error:", err.message);
+    throw new Error("Database connection failed");
   }
 }
 
 export default connectToDatabase;
+
+//
+// nHSFeu8JBMxUQMJq

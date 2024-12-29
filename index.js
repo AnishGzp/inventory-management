@@ -8,6 +8,7 @@ import {
   editRoute,
   getRoute,
 } from "./routes/routes.js";
+import connectToDatabase from "./db.js";
 
 dotenv.config();
 
@@ -27,6 +28,8 @@ app.use("/edit", editRoute);
 app.use("/delete", deleteRoute);
 
 const PORT = process.env.PORT || 4000;
+
+connectToDatabase();
 
 app.listen(PORT, () => {
   console.log(`Server is listening on ${PORT}`);
